@@ -236,7 +236,7 @@ const Header = () => {
   return (
     <>
       <style>{bubbleAnimation}</style>
-      <header className="h-16 border-b border-gray-200 flex items-center justify-between px-4 fixed top-0 left-0 right-0 bg-[#0A1F44] z-50">
+      <header className="h-[70px] border-b border-gray-200 flex items-center justify-between px-4 fixed top-0 left-0 right-0 bg-[#0A1F44] z-50">
         {/* Animated Bubbles */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="bubble animate-float-slow absolute top-4 left-1/4 w-16 h-16 bg-white/10 rounded-full"></div>
@@ -246,7 +246,7 @@ const Header = () => {
         {/* Toggle Button */}
         <div className="flex items-center flex-shrink-0 w-56">
           <button
-            className="mr-2"
+            className="mr-2 cursor-pointer"
             onClick={toggleSidebar}
             aria-label="Toggle sidebar"
           >
@@ -254,14 +254,13 @@ const Header = () => {
           </button>
 
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-              <span className="text-[#0A1F44] text-xl">🌱</span>
-            </div>
+            <img src={Logo} className="w-[63px]" />
+
             <span className="text-2xl font-bold text-white">SkillSeed</span>
           </Link>
         </div>
 
-        <div className="flex items-center space-x-3 w-56 justify-end">
+        <div className="flex items-center space-x-3 w-full justify-end">
           {/* Notification Menu */}
           <Menu as="div" className="relative ml-3">
             <div>
@@ -284,9 +283,9 @@ const Header = () => {
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95"
             >
-              <MenuItems className="absolute right-0 z-50 mt-2 w-[320px] origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none font-primaryRegular">
+              <MenuItems className="absolute right-0 z-50 mt-2 w-[350px] origin-top-right rounded-md bg-white py-1 shadow-lg focus:outline-none font-primaryRegular">
                 <MenuItem>
-                  <div className="p-4 pb-2 flex justify-between items-center border-b">
+                  <div className="p-4 pb-2 flex justify-between items-center">
                     <h3 className="text-xl font-bold">Notifications</h3>
                     <button className="text-gray-400">
                       <svg
@@ -312,8 +311,8 @@ const Header = () => {
                     </button>
                   </div>
                 </MenuItem>
-                <hr />
-                <MenuItem>
+
+                {/* <MenuItem>
                   <div className="flex p-2 gap-2 border-b overflow-x-auto">
                     <button className="whitespace-nowrap bg-blue-100 text-blue-700 px-4 py-1 rounded-full text-sm font-medium">
                       All
@@ -331,7 +330,7 @@ const Header = () => {
                       Badges
                     </button>
                   </div>
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem>
                   <div className="bg-blue-50 flex items-center p-4 gap-4">
                     <div className="bg-white p-2 rounded-full">
@@ -345,7 +344,7 @@ const Header = () => {
                         Never miss your achievements and rewards
                       </p>
                     </div>
-                    <button className="rounded-full bg-black hover:bg-gray-800 text-sm">
+                    <button className="rounded-full hover:bg-gray-800 text-sm">
                       Enable
                     </button>
                   </div>
@@ -415,7 +414,7 @@ const Header = () => {
             >
               <MenuItems className="absolute right-0 z-50 mt-2 w-[300px] origin-top-right rounded-md bg-white py-1 shadow-lg focus:outline-none font-primaryRegular">
                 <MenuItem>
-                  <div className="p-4 flex items-center gap-4 border-b">
+                  <div className="p-4 flex items-center gap-4 border-b border-b-gray-100">
                     <div className="h-14 w-14 rounded-full flex items-center justify-center text-xl text-white font-semibold bg-indigo-600">
                       JD
                     </div>

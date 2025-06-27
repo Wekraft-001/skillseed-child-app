@@ -6,7 +6,9 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import ChildOnboarding from "./pages/ChildOnboarding";
-import Quiz from "./pages/Quiz";
+import QuizHome from "./pages/QuizExplorer/index";
+import Quiz from "./pages/QuizExplorer/quiz";
+import Results from "./pages/QuizExplorer/results";
 import Activities from "./pages/Activities";
 import Mentors from "./pages/Mentors";
 import MentorDetail from "./pages/MentorDetail";
@@ -19,7 +21,9 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route path="home" element={<Home />} />
-            <Route path="quiz" element={<Quiz />} />
+            <Route path="quiz/:ageRange" element={<Quiz />} />
+            <Route path="quiz" element={<QuizHome />} />
+            <Route path="results" element={<Results />} />
             <Route path="activities" element={<Activities />} />
             <Route path="child-onboarding" element={<ChildOnboarding />} />
             <Route path="mentors" element={<Mentors />} />
