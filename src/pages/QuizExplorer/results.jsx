@@ -21,7 +21,7 @@ const Results = () => {
               </div>
 
               <h1 className="text-4xl md:text-5xl font-bold text-[#212121] mb-4">
-                Amazing Work, Emma!
+                Amazing Work, Janelle!
                 <span className="text-[#1A73E8]">🎉</span>
               </h1>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
