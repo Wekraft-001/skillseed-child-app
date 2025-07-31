@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 const Results = () => {
   return (
     <div className="min-h-screen bg-[#F5F7FA]">
@@ -198,16 +199,16 @@ const Results = () => {
 
             {/* Achievement Badge */}
             <div className="text-center mt-12">
-              <div className="inline-flex items-center gap-4 bg-gradient-to-r from-[#FFC107] to-[#FF9800] text-white rounded-full px-8 py-4 shadow-lg">
+              <Link to="/home" className="inline-flex items-center gap-4 bg-gradient-to-r from-[#FFC107] to-[#FF9800] text-white rounded-full px-8 py-4 shadow-lg">
                 <i className="fa-solid fa-medal text-2xl animate-bounce"></i>
                 <div>
                   <p className="font-bold text-lg">Achievement Unlocked!</p>
                   <p className="text-sm opacity-90">
-                    Quiz Explorer Badge Earned
+                   Start Learning
                   </p>
                 </div>
                 <i className="fa-solid fa-star text-2xl animate-spin"></i>
-              </div>
+              </Link>
             </div>
 
             {/* Share Results */}

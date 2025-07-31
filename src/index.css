@@ -22,6 +22,75 @@
   }
 }
 
+@theme {
+  --color-background: hsl(220 100% 97%);
+  --color-foreground: hsl(230 25% 20%);
+  --color-primary: hsl(220 90% 56%);
+  --color-primary-hover: hsl(220 90% 50%);
+  --color-secondary: hsl(270 80% 65%);
+  --color-accent: hsl(45 98% 65%);
+  --color-success: hsl(140 70% 55%);
+  --color-border: hsl(220 25% 90%);
+  --color-muted: hsl(220 20% 95%);
+  --color-muted-foreground: hsl(230 10% 55%);
+  --color-fun-pink: hsl(330 80% 70%);
+  --color-fun-orange: hsl(25 90% 65%);
+  --color-fun-green: hsl(160 70% 60%);
+  --color-fun-purple: hsl(280 70% 70%);
+
+  --shadow-soft: 0 4px 20px hsla(220, 90%, 56%, 0.15);
+  --shadow-hover: 0 8px 30px hsla(220, 90%, 56%, 0.25);
+  --shadow-fun: 0 10px 40px hsla(330, 80%, 70%, 0.3);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background: linear-gradient(135deg, hsl(220 100% 97%), hsl(260 100% 98%));
+    color: var(--color-foreground);
+    min-height: 100vh;
+  }
+}
+
+
+@layer utilities {
+  .animate-bounce-soft {
+    animation: bounce-soft 2s infinite;
+  }
+
+  .animate-wiggle {
+    animation: wiggle 1s ease-in-out infinite;
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite;
+  }
+
+  .hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .fun-shadow {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .fun-shadow-hover {
+    box-shadow: var(--shadow-fun);
+  }
+}
+
 /* Custom animations */
 @keyframes float-slow {
   0%,
@@ -50,6 +119,60 @@
   }
   50% {
     transform: translateY(-10px) rotate(270deg);
+  }
+}
+
+/* ANIMATIONS FOR LOGIN PAGE */
+@keyframes bounce-soft {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes wiggle {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(5deg);
+  }
+  75% {
+    transform: rotate(-5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
   }
 }
 
