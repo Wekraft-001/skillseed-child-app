@@ -95,11 +95,11 @@ const Sidebar = () => {
     //   label: "Career Profile",
     //   path: "/child-career-profile/1",
     // },
-    // {
-    //   icon: <UserPlus className="w-5 h-5 mr-2" />,
-    //   label: "Onboarding",
-    //   path: "/child-onboarding",
-    // },
+    {
+      icon: <UserPlus className="w-5 h-5 mr-2" />,
+      label: "Community",
+      path: "/community",
+    },
     {
       icon: <UserCircle className="w-5 h-5 mr-2" />,
       label: "Mentors",

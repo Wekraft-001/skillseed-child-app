@@ -13,6 +13,7 @@ import Activities from "./pages/Activities";
 import Mentors from "./pages/Mentors";
 import MentorDetail from "./pages/MentorDetail";
 import CareerExcursions from "./pages/CareerExcursions";
+import Community from "./pages/Community";
 
 const App = () => (
   <ThemeProvider>
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="mentors" element={<Mentors />} />
             <Route path="mentor-detail/:mentorId" element={<MentorDetail />} />
             <Route path="career-excursions" element={<CareerExcursions />} />
+            <Route path="community" element={<Community />} />
             {/* <Route
               path="child-career-profile/:childId"
               element={<ChildCareerProfile />}
