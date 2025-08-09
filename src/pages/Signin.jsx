@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import {
   User,
@@ -12,17 +14,50 @@ import {
 } from "lucide-react";
 import mascotImage from "../assets/skillseed-mascot.png";
 import { Input } from "../components/ui/formComponents/input";
+import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 
 const Signin = () => {
+  const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const { handleSubmit } = useForm();
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault(); // prevent form reload
-    navigate("/quiz");
+  const initialValues = {
+    firstName: "",
+    password: "",
+  };
+
+  const [loginDetails, setLoginDetails] = useState(initialValues);
+  const { firstName, password } = loginDetails;
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setLoginDetails({ ...loginDetails, [name]: value });
+  };
+
+  const onSubmit = async () => {
+    setIsLoading(true);
+    setErrorMessage(null);
+    const url = `${apiURL}/auth/child/signin`;
+    try {
+      const response = await axios.post(url, loginDetails);
+      // console.log(response, "response");
+      let accessToken = response.data.access_token;
+      localStorage.setItem("childToken", accessToken);
+      navigate("/home");
+    } catch (error) {
+      console.error("Error in API call:", error);
+      setErrorMessage("Login failed. Please check your credentials.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const FloatingIcon = ({ icon: Icon, className = "", delay = 0 }) => (
@@ -93,34 +128,39 @@ const Signin = () => {
             ></div>
           </div>
           {/* Signin Form */}
-          <form id="signup-form" className="space-y-6">
+          <form
+            id="signup-form"
+            className="space-y-6"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <div className="space-y-2">
               <label className="block text-sm font-bold text-foreground flex items-center gap-2">
                 <User className="w-4 h-4 text-primary" />
-                Your Super Cool Username
+                Your Super Cool Name
               </label>
               <div className="relative group">
                 <Input
                   type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  onFocus={() => setFocusedField("username")}
+                  name="firstName"
+                  value={firstName}
+                  onChange={handleChange}
+                  onFocus={() => setFocusedField("firstName")}
                   className={`pl-12 py-6 rounded-2xl border transition-all duration-300 ${
-                    focusedField === "username"
+                    focusedField === "firstName"
                       ? "border-primary fun-shadow-hover scale-105"
                       : "border-border hover:border-primary/50"
                   }`}
-                  placeholder="Enter your awesome username"
+                  placeholder="Enter your first name"
                   required
                 />
                 <User
                   className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors duration-300 ${
-                    focusedField === "username"
+                    focusedField === "firstName"
                       ? "text-primary"
                       : "text-muted-foreground"
                   }`}
                 />
-                {focusedField === "username" && (
+                {focusedField === "firstName" && (
                   <Sparkles className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-accent animate-wiggle" />
                 )}
               </div>
@@ -133,9 +173,10 @@ const Signin = () => {
               </label>
               <div className="relative group">
                 <Input
-                  type="password"
+                  type="text"
+                  name="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handleChange}
                   onFocus={() => setFocusedField("password")}
                   className={`pl-12 py-6 rounded-2xl border transition-all duration-300 ${
                     focusedField === "password"
@@ -155,14 +196,24 @@ const Signin = () => {
                 {focusedField === "password" && (
                   <Heart className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-fun-pink animate-wiggle" />
                 )}
+                {/* <button
+                  type="button"
+                  className="absolute top-0 inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-sm leading-5 text-gray-500"
+                  onClick={togglePasswordVisibility}
+                >
+                  {showPassword ? (
+                    <IoIosEye size={25} />
+                  ) : (
+                    <IoIosEyeOff size={25} />
+                  )}
+                </button> */}
               </div>
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              onClick={handleSubmit}
-              className={`w-full py-3 font-bold rounded-2xl transition-all duration-300 flex items-center justify-center text-white ${
+              className={`w-full py-3 font-bold rounded-2xl transition-all duration-300 flex items-center justify-center text-white cursor-pointer ${
                 isLoading
                   ? "bg-muted cursor-not-allowed"
                   : "bg-gradient-to-r from-primary to-secondary hover:from-primary-hover hover:to-secondary-hover hover-lift"
@@ -181,6 +232,11 @@ const Signin = () => {
                 </div>
               )}
             </button>
+            {errorMessage && (
+              <div className="bg-red-500 text-white text-sm font-primaryMedium p-4 mt-4 text-center">
+                {errorMessage}
+              </div>
+            )}
           </form>
           {/* Fun Footer Message */}
           <div className="mt-8 text-center">
@@ -200,7 +256,7 @@ const Signin = () => {
             </div>
           </div>
           {/* Floating reaction elements */}
-          {username && (
+          {firstName && (
             <div className="absolute top-4 right-4">
               <div className="bg-success text-white px-3 py-1 rounded-full text-sm font-bold animate-bounce-soft">
                 Great name! 😊
