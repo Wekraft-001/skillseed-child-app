@@ -1,15 +1,6 @@
-import React, { useState, useEffect, Fragment } from "react";
-import {
-  Bell,
-  Globe,
-  LogOut,
-  Plus,
-  Home,
-  BookOpen,
-  Trophy,
-  Users,
-} from "lucide-react";
-import { Link } from "react-router-dom";
+import React, { useState, Fragment } from "react";
+import { Bell, LogOut } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { useSidebar } from "../context/SidebarContext";
 import { IoMenu } from "react-icons/io5";
 import {
@@ -25,6 +16,7 @@ const Header = () => {
   const { toggleSidebar } = useSidebar();
   const [showNotifications, setShowNotifications] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const navigate = useNavigate();
 
   const notifications = [
     {
@@ -212,6 +204,11 @@ const Header = () => {
     };
 
     return <div className={`${iconBg} p-2 rounded-full`}>{getIcon()}</div>;
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("childToken");
+    navigate("/");
   };
 
   // Animation keyframes for bubbles
@@ -571,10 +568,13 @@ const Header = () => {
                   </div>
                 </MenuItem>
                 <MenuItem>
-                  <div className="flex items-center gap-3 text-base w-full justify-center py-3">
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 text-base w-full justify-center py-3 cursor-pointer"
+                  >
                     <LogOut size={20} />
                     <span>Logout</span>
-                  </div>
+                  </button>
                 </MenuItem>
               </MenuItems>
             </Transition>
