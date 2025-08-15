@@ -32,6 +32,7 @@ import {
   FontAwesomeMicroscope,
   FontAwesomeTasks,
 } from "../components/ui/font-awesome-icons";
+import { Button } from "../components/ui/button";
 
 const Activities = () => {
   return (
@@ -100,8 +101,10 @@ const Activities = () => {
                   </div>
                 </div>
                 <DialogFooter>
-                  <button>Cancel</button>
-                  <button>Begin Adventure</button>
+                  <Button type="button" variant="outline">
+                    Cancel
+                  </Button>
+                  <Button type="button">Begin Adventure</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>

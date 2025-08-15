@@ -23,7 +23,7 @@ import {
 const CareerExcursions = () => {
   const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
   const [isConsentModalOpen, setIsConsentModalOpen] = useState(false);
-  const [date, setDate] = useState (undefined);
+  const [date, setDate] = useState(undefined);
   const [parentEmail, setParentEmail] = useState("");
 
   const openCalendarModal = () => {
@@ -52,6 +52,10 @@ const CareerExcursions = () => {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
       <div id="career-excursions" className="space-y-6 mt-24">
+        <div className="bg-[#1A73E8] text-white text-3xl font-extrabold text-center py-6 rounded-2xl shadow-lg tracking-wider animate-bounce">
+          🚧 COMING SOON 🚧
+        </div>
+
         {/* Section Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
@@ -64,7 +68,8 @@ const CareerExcursions = () => {
           </div>
           <button
             // onClick={openConsentModal}
-            className="px-6 py-3 bg-[#1A73E8] text-white rounded-full text-sm hover:bg-[#1557B0] transition-all transform hover:scale-105 flex items-center gap-2"
+            className="px-6 py-3 bg-[#1A73E8] text-white rounded-full text-sm hover:bg-[#1557B0] transition-all transform hover:scale-105 flex items-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed"
+            disabled
           >
             <FontAwesomePlus />
             Book New Trip

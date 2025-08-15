@@ -418,7 +418,7 @@ const Header = () => {
                     <div>
                       <h3 className="text-xl font-bold">Jamie Doe</h3>
                       <p className="text-indigo-600">Explorer Level 3</p>
-                      <div className="flex items-center gap-2 mt-1">
+                      {/* <div className="flex items-center gap-2 mt-1">
                         <div className="h-2 w-20 bg-gray-200 rounded-full overflow-hidden">
                           <div
                             className="h-full bg-yellow-400"
@@ -426,7 +426,7 @@ const Header = () => {
                           ></div>
                         </div>
                         <span className="text-xs text-gray-500">65/100 XP</span>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </MenuItem>
@@ -503,16 +503,16 @@ const Header = () => {
                         <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
                       </svg>
                     </div>
-                    <div>
+                    <Link to="/activities">
                       <div className="font-medium">Progress</div>
                       <div className="text-xs text-gray-500">
                         Track your learning journey
                       </div>
-                    </div>
+                    </Link>
                   </div>
                 </MenuItem>
 
-                <MenuItem className="px-4 py-3 cursor-pointer hover:bg-gray-50">
+                {/* <MenuItem className="px-4 py-3 cursor-pointer hover:bg-gray-50">
                   <div className="flex items-center gap-3 text-base">
                     <div className="p-2 bg-pink-50 rounded-lg">
                       <svg
@@ -566,7 +566,7 @@ const Header = () => {
                       3
                     </span>
                   </div>
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem>
                   <button
                     onClick={handleLogout}

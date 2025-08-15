@@ -174,7 +174,7 @@ const MentorDetail = () => {
             </div>
 
             {/* Session Type */}
-            <div className="mb-6">
+            <div className="mb-6 hidden">
               <h4 className="text-sm text-gray-500 mb-3">
                 Choose Your Adventure!
               </h4>

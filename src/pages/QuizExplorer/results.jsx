@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
 const Results = () => {
   return (
     <div className="min-h-screen bg-[#F5F7FA]">
@@ -156,16 +157,16 @@ const Results = () => {
                   </div>
 
                   <h3 className="text-2xl font-bold mb-3">
-                    Get AI Recommendations
+                    Get Career Recommendations
                   </h3>
-                  <p className="text-blue-100 mb-6 text-sm leading-relaxed">
-                    Let our AI suggest fun activities, learning paths, and
-                    career ideas based on your superpowers!
+                  <p className="text-blue-100 mb-6 text-sm leading-relaxed text-center">
+                    Let our AI suggest learning paths, and career ideas based on
+                    your superpowers!
                   </p>
 
                   <button className="w-full bg-white text-[#1A73E8] rounded-full py-3 px-6 font-semibold hover:bg-gray-50 transition-all transform hover:scale-105 flex items-center justify-center gap-2">
                     <i className="fa-solid fa-sparkles"></i>
-                    Get My Recommendations
+                    Get Recommendations
                   </button>
                 </div>
               </div>
@@ -199,13 +200,14 @@ const Results = () => {
 
             {/* Achievement Badge */}
             <div className="text-center mt-12">
-              <Link to="/home" className="inline-flex items-center gap-4 bg-gradient-to-r from-[#FFC107] to-[#FF9800] text-white rounded-full px-8 py-4 shadow-lg">
+              <Link
+                to="/home"
+                className="inline-flex items-center gap-4 bg-gradient-to-r from-[#FFC107] to-[#FF9800] text-white rounded-full px-8 py-4 shadow-lg"
+              >
                 <i className="fa-solid fa-medal text-2xl animate-bounce"></i>
                 <div>
                   <p className="font-bold text-lg">Achievement Unlocked!</p>
-                  <p className="text-sm opacity-90">
-                   Start Learning
-                  </p>
+                  <p className="text-sm opacity-90">Start Learning</p>
                 </div>
                 <i className="fa-solid fa-star text-2xl animate-spin"></i>
               </Link>

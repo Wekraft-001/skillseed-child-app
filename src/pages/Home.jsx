@@ -11,6 +11,9 @@ import {
   Video,
   Gamepad,
   PenLine,
+  Book,
+  Vibrate,
+  VideoIcon,
 } from "lucide-react";
 
 const Home = () => {
@@ -71,16 +74,16 @@ const Home = () => {
                 Super Explorer Level 5
               </p>
 
-              <div className="mt-6 flex justify-center gap-4">
-                <div className="bg-[#1A73E8]/5 rounded-xl px-4 py-2 text-center">
+              <div className="mt-6 w-full grid grid-cols-2 gap-4">
+                <div className="bg-[#1A73E8]/5 rounded-xl text-center flex flex-col items-center justify-center px-3 py-1">
                   <div className="text-2xl font-bold text-[#1A73E8]">12</div>
                   <div className="text-xs text-gray-500">Magic Badges</div>
                 </div>
-                <div className="bg-[#FF4081]/5 rounded-xl px-4 py-2 text-center">
+                {/* <div className="bg-[#FF4081]/5 rounded-xl text-center flex flex-col items-center justify-center px-3">
                   <div className="text-2xl font-bold text-[#FF4081]">89</div>
                   <div className="text-xs text-gray-500">Adventures</div>
-                </div>
-                <div className="bg-[#FFC107]/5 rounded-xl px-4 py-2 text-center">
+                </div> */}
+                <div className="bg-[#FFC107]/5 rounded-xl flex flex-col items-center justify-center px-3 py-1">
                   <div className="text-2xl font-bold text-[#FFC107]">156</div>
                   <div className="text-xs text-gray-500">Stars</div>
                 </div>
@@ -93,7 +96,7 @@ const Home = () => {
               className="bg-white rounded-2xl p-6 shadow-sm"
             >
               <div className="flex items-center justify-between mb-6">
-                <h3 className="font-semibold text-[#212121]">My Garden</h3>
+                <h3 className="font-semibold text-[#212121]">My Projects</h3>
                 <button className="w-8 h-8 rounded-full bg-[#FFC107]/10 flex items-center justify-center">
                   <Plus size={16} className="text-[#FFC107]" />
                 </button>
@@ -159,7 +162,7 @@ const Home = () => {
 
               <div className="grid grid-cols-3 gap-4">
                 <div className="badge-item group relative cursor-pointer">
-                  <div className="w-16 h-16 rounded-full bg-[#FFC107]/10 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
+                  <div className="w-14 h-14 rounded-full bg-[#FFC107]/10 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
                     <Rocket size={24} className="text-[#FFC107]" />
                   </div>
                   <p className="text-xs text-center mt-2 text-gray-600">
@@ -167,7 +170,7 @@ const Home = () => {
                   </p>
                 </div>
                 <div className="badge-item group relative cursor-pointer">
-                  <div className="w-16 h-16 rounded-full bg-[#4CAF50]/10 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
+                  <div className="w-14 h-14 rounded-full bg-[#4CAF50]/10 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
                     <FlaskConical size={24} className="text-[#4CAF50]" />
                   </div>
                   <p className="text-xs text-center mt-2 text-gray-600">
@@ -175,7 +178,7 @@ const Home = () => {
                   </p>
                 </div>
                 <div className="badge-item group relative cursor-pointer">
-                  <div className="w-16 h-16 rounded-full bg-[#FF4081]/10 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
+                  <div className="w-14 h-14 rounded-full bg-[#FF4081]/10 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
                     <Palette size={24} className="text-[#FF4081]" />
                   </div>
                   <p className="text-xs text-center mt-2 text-gray-600">
@@ -229,11 +232,13 @@ const Home = () => {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-[#4CAF50]/10 flex items-center justify-center">
-                        <FlaskConical size={20} className="text-[#4CAF50]" />
+                        <VideoIcon size={20} className="text-[#4CAF50]" />
                       </div>
                       <div>
-                        <h4 className="font-medium text-[#212121]">Science</h4>
-                        <p className="text-sm text-gray-500">8 projects done</p>
+                        <h4 className="font-medium text-[#212121]">Videos</h4>
+                        <p className="text-sm text-gray-500">
+                          8 videos watched
+                        </p>
                       </div>
                     </div>
                     <div className="w-12 h-12 rounded-full border-4 border-[#4CAF50] flex items-center justify-center">
@@ -255,7 +260,7 @@ const Home = () => {
                           Problem Solving
                         </h4>
                         <p className="text-sm text-gray-500">
-                          12 challenges won
+                          12 projects completed
                         </p>
                       </div>
                     </div>
@@ -281,8 +286,8 @@ const Home = () => {
                     Videos
                   </button>
                   <button className="px-4 py-2 rounded-full bg-white text-sm font-medium text-[#4CAF50] hover:bg-[#4CAF50] hover:text-white transition-colors">
-                    <Gamepad size={16} className="inline mr-2" />
-                    Games
+                    <Book size={16} className="inline mr-2" />
+                    Books
                   </button>
                   <button className="px-4 py-2 rounded-full bg-white text-sm font-medium text-[#FF4081] hover:bg-[#FF4081] hover:text-white transition-colors">
                     <PenLine size={16} className="inline mr-2" />
