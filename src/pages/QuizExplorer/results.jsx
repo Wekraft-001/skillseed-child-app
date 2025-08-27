@@ -164,10 +164,13 @@ const Results = () => {
                     your superpowers!
                   </p>
 
-                  <button className="w-full bg-white text-[#1A73E8] rounded-full py-3 px-6 font-semibold hover:bg-gray-50 transition-all transform hover:scale-105 flex items-center justify-center gap-2">
+                  <Link
+                    to="/career-recommendations"
+                    className="w-full bg-white text-[#1A73E8] rounded-full py-3 px-6 font-semibold hover:bg-gray-50 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+                  >
                     <i className="fa-solid fa-sparkles"></i>
                     Get Recommendations
-                  </button>
+                  </Link>
                 </div>
               </div>
 
@@ -190,10 +193,13 @@ const Results = () => {
                     get advice from our friendly AI mentor!
                   </p>
 
-                  <button className="w-full bg-white text-[#4CAF50] rounded-full py-3 px-6 font-semibold hover:bg-gray-50 transition-all transform hover:scale-105 flex items-center justify-center gap-2">
+                  <Link
+                    to="/ai-advisor"
+                    className="w-full bg-white text-[#4CAF50] rounded-full py-3 px-6 font-semibold hover:bg-gray-50 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+                  >
                     <i className="fa-solid fa-comment-dots"></i>
                     Start Chatting
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>

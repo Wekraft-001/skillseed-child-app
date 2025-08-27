@@ -1,367 +1,405 @@
 import React from "react";
-import {
-  BookOpen,
-  FlaskRound,
-  Gamepad,
-  Heart,
-  Laptop,
-  Music,
-  Palette,
-  PaletteIcon,
-  Plus,
-  SendIcon,
-  ShieldPlus,
-  SmileIcon,
-  Star,
-  Users,
-} from "lucide-react";
+import { PageMetadata } from "../components/PageMetadata";
+import { Star, Users } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Community = () => {
+  const navigate = useNavigate();
+
+  const handleCommunityClick = (communityId) => {
+    navigate(`/community/${communityId}`);
+  };
+
   return (
-    <div className="bg-[#F5F7FA] ">
-      <div className="container mx-auto px-6 py-8">
-        {/* Community Hub */}
-        {/* Welcome Section */}
-        <div id="welcome-section" className="text-center mb-8 relative">
-          <div className="absolute -top-4 left-1/4 w-16 h-16 bg-[#FFC107]/20 rounded-full blur-xl animate-pulse"></div>
-          <div className="absolute top-2 right-1/3 w-12 h-12 bg-[#FF4081]/20 rounded-full blur-lg animate-bounce"></div>
+    <>
+      <PageMetadata
+        title="Community | SkillSeed"
+        description="Connect with friends, share achievements, and learn together in amazing communities"
+      />
+      <main className="bg-[#F5F7FA] min-h-screen">
+        {/* Main Content */}
+        <div className="container mx-auto px-6 py-8">
+          {/* Hero Section */}
+          <section
+            id="community-hero"
+            className="relative bg-gradient-to-br from-[#1A73E8]/10 via-[#FFC107]/10 to-[#FF4081]/10 rounded-3xl p-8 mb-8 overflow-hidden h-[300px] flex items-center"
+          >
+            {/* Floating Bubbles */}
+            <div className="absolute top-4 right-8 w-16 h-16 bg-[#FFC107]/20 rounded-full animate-pulse"></div>
+            <div className="absolute bottom-8 left-12 w-12 h-12 bg-[#1A73E8]/20 rounded-full animate-bounce"></div>
+            <div
+              className="absolute top-12 left-1/3 w-8 h-8 bg-[#FF4081]/20 rounded-full animate-bounce"
+              style={{ animationDelay: "0.3s" }}
+            ></div>
+            <div
+              className="absolute bottom-4 right-1/4 w-10 h-10 bg-[#4CAF50]/20 rounded-full animate-pulse"
+              style={{ animationDelay: "0.7s" }}
+            ></div>
+            <div
+              className="absolute top-20 right-1/3 w-6 h-6 bg-[#9C27B0]/20 rounded-full animate-bounce"
+              style={{ animationDelay: "1.2s" }}
+            ></div>
+            <div
+              className="absolute top-6 left-20 w-14 h-14 bg-[#FF5722]/20 rounded-full animate-pulse"
+              style={{ animationDelay: "0.9s" }}
+            ></div>
 
-          <h1 className="text-4xl md:text-5xl font-bold text-[#212121] mb-4">
-            Welcome to Kids Community!
-            <span className="text-[#FFC107]">🌟</span>
-          </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6">
-            Connect with friends who love the same things you do! Share ideas,
-            learn together, and have fun!
-          </p>
-
-          <button className="bg-[#1A73E8] text-white rounded-full px-8 py-3 font-semibold hover:bg-[#1557B0] transition-all transform hover:scale-105 flex items-center gap-2 mx-auto">
-            <Plus className="w-4 h-4" />
-            Join a Community
-          </button>
-        </div>
-
-        {/* Interest Categories */}
-        <div id="categories-section" className="mb-8">
-          <h2 className="text-2xl font-bold text-[#212121] mb-6 flex items-center gap-3">
-            <Heart className="w-5 h-5 text-[#FF4081] fill-[#FF4081]" />
-            Find Your Interests
-          </h2>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            <div className="bg-white rounded-2xl p-6 text-center shadow-sm hover:shadow-lg transition-all cursor-pointer group">
-              <div className="w-16 h-16 bg-[#FF4081]/20 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                <Palette className="w-7 h-7 text-[#FF4081] " />
+            <div className="text-center w-full z-10">
+              <h1 className="text-4xl font-bold text-[#212121] mb-4">
+                🌟 Join Amazing Communities! 🎉
+              </h1>
+              <p className="text-xl text-gray-600 mb-6">
+                Connect with friends, share your achievements, and learn
+                together!
+              </p>
+              <div className="flex justify-center items-center gap-4">
+                <img
+                  src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg"
+                  alt="Emma"
+                  className="w-16 h-16 rounded-full border-4 border-white shadow-lg"
+                />
+                <div className="text-3xl">🤝</div>
+                <img
+                  src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg"
+                  alt="Sarah"
+                  className="w-16 h-16 rounded-full border-4 border-white shadow-lg"
+                />
+                <div className="text-3xl">💫</div>
+                <img
+                  src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg"
+                  alt="Mia"
+                  className="w-16 h-16 rounded-full border-4 border-white shadow-lg"
+                />
               </div>
-              <h3 className="font-semibold text-[#212121] text-sm">
-                Arts &amp; Crafts
-              </h3>
-              <p className="text-xs text-gray-500 mt-1">124 kids</p>
             </div>
+          </section>
 
-            <div className="bg-white rounded-2xl p-6 text-center shadow-sm hover:shadow-lg transition-all cursor-pointer group">
-              <div className="w-16 h-16 bg-[#1A73E8]/20 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                <FlaskRound className="w-7 h-7 text-[#1A73E8] fill-[#1A73E8]" />
-              </div>
-              <h3 className="font-semibold text-[#212121] text-sm">
-                Science Fun
-              </h3>
-              <p className="text-xs text-gray-500 mt-1">89 kids</p>
-            </div>
+          {/* Featured Communities */}
+          <section id="featured-communities" className="mb-8">
+            <h2 className="text-2xl font-bold text-[#212121] mb-6 flex items-center gap-3">
+              <Star className="w-6 h-6 text-[#FFC107]" />
+              Featured Communities
+            </h2>
 
-            <div className="bg-white rounded-2xl p-6 text-center shadow-sm hover:shadow-lg transition-all cursor-pointer group">
-              <div className="w-16 h-16 bg-[#4CAF50]/20 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                <Laptop className="w-7 h-7 text-[#4CAF50]" />
-              </div>
-              <h3 className="font-semibold text-[#212121] text-sm">
-                Tech &amp; Coding
-              </h3>
-              <p className="text-xs text-gray-500 mt-1">156 kids</p>
-            </div>
-
-            <div className="bg-white rounded-2xl p-6 text-center shadow-sm hover:shadow-lg transition-all cursor-pointer group">
-              <div className="w-16 h-16 bg-[#FFC107]/20 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                <Music className="w-7 h-7 text-[#FFC107]" />
-              </div>
-              <h3 className="font-semibold text-[#212121] text-sm">
-                Music &amp; Dance
-              </h3>
-              <p className="text-xs text-gray-500 mt-1">97 kids</p>
-            </div>
-
-            <div className="bg-white rounded-2xl p-6 text-center shadow-sm hover:shadow-lg transition-all cursor-pointer group">
-              <div className="w-16 h-16 bg-[#9C27B0]/20 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                <BookOpen className="w-7 h-7 text-[#9C27B0]" />
-              </div>
-              <h3 className="font-semibold text-[#212121] text-sm">
-                Reading Club
-              </h3>
-              <p className="text-xs text-gray-500 mt-1">203 kids</p>
-            </div>
-
-            <div className="bg-white rounded-2xl p-6 text-center shadow-sm hover:shadow-lg transition-all cursor-pointer group">
-              <div className="w-16 h-16 bg-[#FF9800]/20 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                <Gamepad className="w-7 h-7 text-[#FF9800]" />
-              </div>
-              <h3 className="font-semibold text-[#212121] text-sm">
-                Games &amp; Fun
-              </h3>
-              <p className="text-xs text-gray-500 mt-1">178 kids</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Active Communities */}
-        <div
-          id="active-communities"
-          className="grid grid-cols-1 lg:grid-cols-3 gap-8"
-        >
-          {/* Main Chat Area */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <div className="bg-gradient-to-r from-[#FF4081] to-[#E91E63] p-6 text-white">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-xl font-bold flex items-center gap-2">
-                      <PaletteIcon className="w-6 h-6" />
-                      Arts &amp; Crafts Club
-                    </h3>
-                    <p className="text-pink-100 text-sm">
-                      Share your amazing creations!
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    <span className="text-sm">124 online</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Chat Messages */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Science Explorers */}
               <div
-                id="chat-messages"
-                className="h-96 overflow-y-auto p-6 space-y-4"
+                id="science-community"
+                className="bg-white rounded-3xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow cursor-pointer community-card"
+                onClick={() => handleCommunityClick("science-explorers")}
               >
-                <div className="flex items-start gap-3">
-                  <img
-                    src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg"
-                    alt="Maya"
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <div className="bg-[#F5F7FA] rounded-2xl rounded-tl-sm p-3 max-w-xs">
-                    <p className="text-[#1A73E8] font-semibold text-sm">Maya</p>
-                    <p className="text-[#212121] text-sm">
-                      Look at my rainbow painting! 🌈
-                    </p>
-                    <div className="mt-2 bg-white rounded-xl p-2">
+                <div className="relative bg-gradient-to-br from-[#4CAF50]/20 to-[#4CAF50]/10 p-6 h-32">
+                  <div className="absolute top-2 right-2 w-6 h-6 bg-[#4CAF50]/30 rounded-full animate-pulse"></div>
+                  <div className="absolute bottom-2 left-4 w-4 h-4 bg-[#4CAF50]/30 rounded-full animate-bounce"></div>
+                  <div className="text-4xl mb-2">🔬</div>
+                  <h3 className="text-xl font-bold text-[#212121]">
+                    Science Explorers
+                  </h3>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-600 mb-4">
+                    Discover amazing experiments, share cool science facts, and
+                    explore the wonders of our world together!
+                  </p>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex -space-x-2">
                       <img
-                        className="w-full h-20 rounded-lg object-cover"
-                        src="https://storage.googleapis.com/uxpilot-auth.appspot.com/184e1ad47e-9501565c763e5de94bea.png"
-                        alt="colorful rainbow painting by child, watercolor style, bright colors"
+                        src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg"
+                        alt="Member"
+                        className="w-8 h-8 rounded-full border-2 border-white"
                       />
+                      <img
+                        src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg"
+                        alt="Member"
+                        className="w-8 h-8 rounded-full border-2 border-white"
+                      />
+                      <img
+                        src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg"
+                        alt="Member"
+                        className="w-8 h-8 rounded-full border-2 border-white"
+                      />
+                      <div className="w-8 h-8 bg-[#4CAF50] rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold">
+                        +24
+                      </div>
                     </div>
+                    <span className="text-sm text-gray-500">27 members</span>
                   </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <img
-                    src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg"
-                    alt="Alex"
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <div className="bg-[#F5F7FA] rounded-2xl rounded-tl-sm p-3 max-w-xs">
-                    <p className="text-[#4CAF50] font-semibold text-sm">Alex</p>
-                    <p className="text-[#212121] text-sm">
-                      Wow Maya! That's so beautiful! I love the colors! ✨
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 justify-end">
-                  <div className="bg-[#1A73E8] text-white rounded-2xl rounded-tr-sm p-3 max-w-xs">
-                    <p className="text-blue-100 font-semibold text-sm">You</p>
-                    <p className="text-white text-sm">
-                      Amazing work Maya! Want to try making one together? 🎨
-                    </p>
-                  </div>
-                  <img
-                    src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg"
-                    alt="You"
-                    className="w-8 h-8 rounded-full"
-                  />
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <img
-                    src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg"
-                    alt="Sofia"
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <div className="bg-[#F5F7FA] rounded-2xl rounded-tl-sm p-3 max-w-xs">
-                    <p className="text-[#9C27B0] font-semibold text-sm">
-                      Sofia
-                    </p>
-                    <p className="text-[#212121] text-sm">
-                      I just finished my clay elephant! 🐘
-                    </p>
-                  </div>
+                  <button className="w-full bg-[#4CAF50] text-white py-3 rounded-full font-semibold hover:bg-[#45a049] transition-colors">
+                    Join Community 🚀
+                  </button>
                 </div>
               </div>
 
-              {/* Message Input */}
-              <div className="border-t p-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex-1 relative">
-                    <input
-                      type="text"
-                      placeholder="Type your message... 😊"
-                      className="w-full bg-[#F5F7FA] rounded-full px-4 py-3 text-[#212121] focus:outline-none focus:ring-2 focus:ring-[#1A73E8]"
-                    />
-                    <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#FFC107] transition-colors">
-                      <SmileIcon className="w-6 h-6" />
-                    </button>
+              {/* Art & Creativity */}
+              <div
+                id="art-community"
+                className="bg-white rounded-3xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow cursor-pointer community-card"
+                onClick={() => handleCommunityClick("art-creativity")}
+              >
+                <div className="relative bg-gradient-to-br from-[#FF4081]/20 to-[#FF4081]/10 p-6 h-32">
+                  <div className="absolute top-2 right-2 w-6 h-6 bg-[#FF4081]/30 rounded-full animate-pulse"></div>
+                  <div className="absolute bottom-2 left-4 w-4 h-4 bg-[#FF4081]/30 rounded-full animate-bounce"></div>
+                  <div className="text-4xl mb-2">🎨</div>
+                  <h3 className="text-xl font-bold text-[#212121]">
+                    Art & Creativity
+                  </h3>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-600 mb-4">
+                    Share your artwork, learn new drawing techniques, and get
+                    inspired by amazing creative projects!
+                  </p>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex -space-x-2">
+                      <img
+                        src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg"
+                        alt="Member"
+                        className="w-8 h-8 rounded-full border-2 border-white"
+                      />
+                      <img
+                        src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg"
+                        alt="Member"
+                        className="w-8 h-8 rounded-full border-2 border-white"
+                      />
+                      <img
+                        src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg"
+                        alt="Member"
+                        className="w-8 h-8 rounded-full border-2 border-white"
+                      />
+                      <div className="w-8 h-8 bg-[#FF4081] rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold">
+                        +18
+                      </div>
+                    </div>
+                    <span className="text-sm text-gray-500">21 members</span>
                   </div>
-                  <button className="bg-[#1A73E8] text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#1557B0] transition-colors">
-                    <SendIcon className="w-6 h-6" />
+                  <button className="w-full bg-[#FF4081] text-white py-3 rounded-full font-semibold hover:bg-[#e91e63] transition-colors">
+                    Join Community 🎨
+                  </button>
+                </div>
+              </div>
+
+              {/* Tech Wizards */}
+              <div
+                id="tech-community"
+                className="bg-white rounded-3xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow cursor-pointer community-card"
+                onClick={() => handleCommunityClick("tech-wizards")}
+              >
+                <div className="relative bg-gradient-to-br from-[#1A73E8]/20 to-[#1A73E8]/10 p-6 h-32">
+                  <div className="absolute top-2 right-2 w-6 h-6 bg-[#1A73E8]/30 rounded-full animate-pulse"></div>
+                  <div className="absolute bottom-2 left-4 w-4 h-4 bg-[#1A73E8]/30 rounded-full animate-bounce"></div>
+                  <div className="text-4xl mb-2">💻</div>
+                  <h3 className="text-xl font-bold text-[#212121]">
+                    Tech Wizards
+                  </h3>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-600 mb-4">
+                    Learn coding, build cool apps, and discover the latest
+                    technology trends with fellow young developers!
+                  </p>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex -space-x-2">
+                      <img
+                        src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg"
+                        alt="Member"
+                        className="w-8 h-8 rounded-full border-2 border-white"
+                      />
+                      <img
+                        src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-9.jpg"
+                        alt="Member"
+                        className="w-8 h-8 rounded-full border-2 border-white"
+                      />
+                      <img
+                        src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg"
+                        alt="Member"
+                        className="w-8 h-8 rounded-full border-2 border-white"
+                      />
+                      <div className="w-8 h-8 bg-[#1A73E8] rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold">
+                        +32
+                      </div>
+                    </div>
+                    <span className="text-sm text-gray-500">35 members</span>
+                  </div>
+                  <button className="w-full bg-[#1A73E8] text-white py-3 rounded-full font-semibold hover:bg-[#1557b0] transition-colors">
+                    Join Community 💻
                   </button>
                 </div>
               </div>
             </div>
-          </div>
+          </section>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Online Friends */}
-            <div
-              id="online-friends"
-              className="bg-white rounded-2xl p-6 shadow-lg"
-            >
-              <h3 className="text-lg font-bold text-[#212121] mb-4 flex items-center gap-2">
-                <Users className="w-6 h-6 text-[#4CAF50]" />
-                Friends Online
-              </h3>
+          {/* All Communities */}
+          <section id="all-communities" className="mb-8">
+            <h2 className="text-2xl font-bold text-[#212121] mb-6 flex items-center gap-3">
+              <Users className="w-6 h-6 text-[#FFC107]" />
+              All Communities
+            </h2>
 
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#F5F7FA] cursor-pointer">
-                  <div className="relative">
-                    <img
-                      src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg"
-                      alt="Maya"
-                      className="w-8 h-8 rounded-full"
-                    />
-                    <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-[#4CAF50] rounded-full border-2 border-white"></div>
-                  </div>
-                  <div>
-                    <p className="text-[#212121] font-medium text-sm">Maya</p>
-                    <p className="text-gray-500 text-xs">Creating art 🎨</p>
-                  </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Reading Club */}
+              <div
+                id="reading-community"
+                className="bg-white rounded-3xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow cursor-pointer community-card"
+              >
+                <div className="relative bg-gradient-to-br from-[#9C27B0]/20 to-[#9C27B0]/10 p-4 h-24">
+                  <div className="absolute top-1 right-1 w-4 h-4 bg-[#9C27B0]/30 rounded-full animate-pulse"></div>
+                  <div className="text-3xl">📚</div>
                 </div>
-
-                <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#F5F7FA] cursor-pointer">
-                  <div className="relative">
-                    <img
-                      src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg"
-                      alt="Alex"
-                      className="w-8 h-8 rounded-full"
-                    />
-                    <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-[#4CAF50] rounded-full border-2 border-white"></div>
+                <div className="p-4">
+                  <h3 className="text-lg font-bold text-[#212121] mb-2">
+                    Reading Club
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Share favorite books and stories!
+                  </p>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex -space-x-1">
+                      <img
+                        src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg"
+                        alt="Member"
+                        className="w-6 h-6 rounded-full border border-white"
+                      />
+                      <img
+                        src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg"
+                        alt="Member"
+                        className="w-6 h-6 rounded-full border border-white"
+                      />
+                      <div className="w-6 h-6 bg-[#9C27B0] rounded-full border border-white flex items-center justify-center text-white text-xs">
+                        +8
+                      </div>
+                    </div>
+                    <span className="text-xs text-gray-500">10 members</span>
                   </div>
-                  <div>
-                    <p className="text-[#212121] font-medium text-sm">Alex</p>
-                    <p className="text-gray-500 text-xs">Science explorer 🔬</p>
-                  </div>
+                  <button className="w-full bg-[#9C27B0] text-white py-2 rounded-full text-sm font-semibold hover:bg-[#7b1fa2] transition-colors">
+                    Join 📖
+                  </button>
                 </div>
+              </div>
 
-                <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#F5F7FA] cursor-pointer">
-                  <div className="relative">
-                    <img
-                      src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg"
-                      alt="Sofia"
-                      className="w-8 h-8 rounded-full"
-                    />
-                    <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-[#FFC107] rounded-full border-2 border-white"></div>
+              {/* Sports Champions */}
+              <div
+                id="sports-community"
+                className="bg-white rounded-3xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow cursor-pointer community-card"
+              >
+                <div className="relative bg-gradient-to-br from-[#FF5722]/20 to-[#FF5722]/10 p-4 h-24">
+                  <div className="absolute top-1 right-1 w-4 h-4 bg-[#FF5722]/30 rounded-full animate-pulse"></div>
+                  <div className="text-3xl">⚽</div>
+                </div>
+                <div className="p-4">
+                  <h3 className="text-lg font-bold text-[#212121] mb-2">
+                    Sports Champions
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Share sports achievements and tips!
+                  </p>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex -space-x-1">
+                      <img
+                        src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg"
+                        alt="Member"
+                        className="w-6 h-6 rounded-full border border-white"
+                      />
+                      <img
+                        src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg"
+                        alt="Member"
+                        className="w-6 h-6 rounded-full border border-white"
+                      />
+                      <div className="w-6 h-6 bg-[#FF5722] rounded-full border border-white flex items-center justify-center text-white text-xs">
+                        +12
+                      </div>
+                    </div>
+                    <span className="text-xs text-gray-500">14 members</span>
                   </div>
-                  <div>
-                    <p className="text-[#212121] font-medium text-sm">Sofia</p>
-                    <p className="text-gray-500 text-xs">
-                      Away - Clay crafting
-                    </p>
+                  <button className="w-full bg-[#FF5722] text-white py-2 rounded-full text-sm font-semibold hover:bg-[#e64a19] transition-colors">
+                    Join ⚽
+                  </button>
+                </div>
+              </div>
+
+              {/* Music Makers */}
+              <div
+                id="music-community"
+                className="bg-white rounded-3xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow cursor-pointer community-card"
+              >
+                <div className="relative bg-gradient-to-br from-[#FFC107]/20 to-[#FFC107]/10 p-4 h-24">
+                  <div className="absolute top-1 right-1 w-4 h-4 bg-[#FFC107]/30 rounded-full animate-pulse"></div>
+                  <div className="text-3xl">🎵</div>
+                </div>
+                <div className="p-4">
+                  <h3 className="text-lg font-bold text-[#212121] mb-2">
+                    Music Makers
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Create and share your music!
+                  </p>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex -space-x-1">
+                      <img
+                        src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg"
+                        alt="Member"
+                        className="w-6 h-6 rounded-full border border-white"
+                      />
+                      <img
+                        src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg"
+                        alt="Member"
+                        className="w-6 h-6 rounded-full border border-white"
+                      />
+                      <div className="w-6 h-6 bg-[#FFC107] rounded-full border border-white flex items-center justify-center text-white text-xs">
+                        +6
+                      </div>
+                    </div>
+                    <span className="text-xs text-gray-500">8 members</span>
                   </div>
+                  <button className="w-full bg-[#FFC107] text-white py-2 rounded-full text-sm font-semibold hover:bg-[#ffb300] transition-colors">
+                    Join 🎵
+                  </button>
+                </div>
+              </div>
+
+              {/* Young Entrepreneurs */}
+              <div
+                id="entrepreneur-community"
+                className="bg-white rounded-3xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow cursor-pointer community-card"
+              >
+                <div className="relative bg-gradient-to-br from-[#607D8B]/20 to-[#607D8B]/10 p-4 h-24">
+                  <div className="absolute top-1 right-1 w-4 h-4 bg-[#607D8B]/30 rounded-full animate-pulse"></div>
+                  <div className="text-3xl">💡</div>
+                </div>
+                <div className="p-4">
+                  <h3 className="text-lg font-bold text-[#212121] mb-2">
+                    Young Entrepreneurs
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Share business ideas and dreams!
+                  </p>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex -space-x-1">
+                      <img
+                        src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg"
+                        alt="Member"
+                        className="w-6 h-6 rounded-full border border-white"
+                      />
+                      <img
+                        src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-7.jpg"
+                        alt="Member"
+                        className="w-6 h-6 rounded-full border border-white"
+                      />
+                      <div className="w-6 h-6 bg-[#607D8B] rounded-full border border-white flex items-center justify-center text-white text-xs">
+                        +5
+                      </div>
+                    </div>
+                    <span className="text-xs text-gray-500">7 members</span>
+                  </div>
+                  <button className="w-full bg-[#607D8B] text-white py-2 rounded-full text-sm font-semibold hover:bg-[#546e7a] transition-colors">
+                    Join 💡
+                  </button>
                 </div>
               </div>
             </div>
-
-            {/* Recent Projects */}
-            <div
-              id="recent-projects"
-              className="bg-white rounded-2xl p-6 shadow-lg"
-            >
-              <h3 className="text-lg font-bold text-[#212121] mb-4 flex items-center gap-2">
-                <Star className="w-6 h-6 text-[#FFC107]" />
-                Amazing Projects
-              </h3>
-
-              <div className="space-y-4">
-                <div className="bg-[#F5F7FA] rounded-xl p-3">
-                  <div className="flex items-center gap-2 mb-2">
-                    <img
-                      src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg"
-                      alt="Leo"
-                      className="w-6 h-6 rounded-full"
-                    />
-                    <span className="text-[#212121] font-medium text-sm">
-                      Leo
-                    </span>
-                  </div>
-                  <img
-                    className="w-full h-16 rounded-lg object-cover mb-2"
-                    src="https://storage.googleapis.com/uxpilot-auth.appspot.com/5b1d2dc97d-bae87a88b1f1b5f42895.png"
-                    alt="robot drawing by child, colorful markers, simple design"
-                  />
-                  <p className="text-xs text-gray-600">My robot friend! 🤖</p>
-                </div>
-
-                <div className="bg-[#F5F7FA] rounded-xl p-3">
-                  <div className="flex items-center gap-2 mb-2">
-                    <img
-                      src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-7.jpg"
-                      alt="Zara"
-                      className="w-6 h-6 rounded-full"
-                    />
-                    <span className="text-[#212121] font-medium text-sm">
-                      Zara
-                    </span>
-                  </div>
-                  <img
-                    className="w-full h-16 rounded-lg object-cover mb-2"
-                    src="https://storage.googleapis.com/uxpilot-auth.appspot.com/552ca8c292-16e3bd4a570c024ad0c5.png"
-                    alt="butterfly craft made with paper, colorful wings, child artwork"
-                  />
-                  <p className="text-xs text-gray-600">Paper butterfly! 🦋</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Safety Reminder */}
-            <div
-              id="safety-reminder"
-              className="bg-gradient-to-br from-[#4CAF50] to-[#2E7D32] rounded-2xl p-6 text-white"
-            >
-              <div className="text-center flex flex-col items-center">
-                <ShieldPlus className="w-7 h-7 text-3xl mb-3" />
-                <h3 className="font-bold mb-2">Stay Safe!</h3>
-                <p className="text-green-100 text-sm mb-3">
-                  Remember to be kind and never share personal information!
-                </p>
-                <button className="bg-white text-[#4CAF50] rounded-full px-4 py-2 text-sm font-semibold hover:bg-gray-50 transition-colors">
-                  Safety Tips
-                </button>
-              </div>
-            </div>
-          </div>
+          </section>
         </div>
-      </div>
-    </div>
+      </main>
+    </>
   );
 };
 

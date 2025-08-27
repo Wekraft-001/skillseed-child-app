@@ -7,11 +7,13 @@ import {
   UserCircle,
   Activity,
   Bus,
+  Trophy,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { cn } from "../lib/utils";
 import { ScrollArea } from "./ui/scroll-area";
 import { useSidebar } from "../context/SidebarContext";
+import { GrResources } from "react-icons/gr";
 
 const Sidebar = () => {
   const { isOpen } = useSidebar();
@@ -90,11 +92,16 @@ const Sidebar = () => {
       label: "Activities",
       path: "/activities",
     },
-    // {
-    //   icon: <Users className="w-5 h-5 mr-2" />,
-    //   label: "Career Profile",
-    //   path: "/child-career-profile/1",
-    // },
+    {
+      icon: <GrResources className="w-5 h-5 mr-2" />,
+      label: "Resorces",
+      path: "/resources",
+    },
+    {
+      icon: <Trophy className="w-5 h-5 mr-2" />,
+      label: "Achievements",
+      path: "/achievements",
+    },
     {
       icon: <UserPlus className="w-5 h-5 mr-2" />,
       label: "Community",
