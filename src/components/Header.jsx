@@ -852,7 +852,7 @@ const Header = () => {
           >
             <IoMenu size={30} color="white" />
           </button>
-          <Link to="/" className="flex items-center gap-3">
+          <Link to="/home" className="flex items-center gap-3">
             <img src={Logo} className="w-[63px]" />
             <span className="text-2xl font-bold text-white">SkillSeed</span>
           </Link>

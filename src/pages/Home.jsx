@@ -15,6 +15,7 @@ import {
   Vibrate,
   VideoIcon,
 } from "lucide-react";
+import AIAssistant from "../components/AIAssistant";
 
 const Home = () => {
   return (
@@ -388,6 +389,8 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      <AIAssistant />
     </>
   );
 };
