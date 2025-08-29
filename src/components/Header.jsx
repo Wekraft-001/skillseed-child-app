@@ -1069,7 +1069,7 @@ const Header = () => {
                         className="text-amber-600"
                       >
                         <circle cx="12" cy="8" r="7"></circle>
-                        <polyline points="8.21 13.89 7 23l5-3 5 3-1.21-9.12"></polyline>
+                        {/* <polyline points="8.21 13.89 7 23l5-3 5 3-1.21-9.12"></polyline> */}
                       </svg>
                     </div>
                     <div>
