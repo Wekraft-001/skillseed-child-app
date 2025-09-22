@@ -1,4 +1,6 @@
 import React from "react";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 import { PageMetadata } from "../components/PageMetadata";
 import {
   Crown,
@@ -14,10 +16,90 @@ import {
   Book,
   Vibrate,
   VideoIcon,
+  Compass,
+  Lightbulb,
+  Map,
+  Target,
 } from "lucide-react";
 import AIAssistant from "../components/AIAssistant";
 
 const Home = () => {
+  const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+  const token = localStorage.getItem("childToken");
+
+  const getDashboardData = async () => {
+    const res = await axios.get(`${apiURL}/student/dashboard`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    // console.log(res.data);
+    return res.data.dashboardResponse;
+  };
+
+  const {
+    data: dashboardData = {},
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["dashboard-data"],
+    queryFn: getDashboardData,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const getUserLevelInfo = (age) => {
+    if (age >= 6 && age <= 8) {
+      return {
+        title: "Early Explorer",
+        icon: Compass,
+        emoji: "🌱",
+      };
+    } else if (age >= 9 && age <= 12) {
+      return {
+        title: "Budding Innovator",
+        icon: Lightbulb,
+        emoji: "💡",
+      };
+    } else if (age >= 13 && age <= 15) {
+      return {
+        title: "Teen Trailblazer",
+        icon: Map,
+        emoji: "🚀",
+      };
+    } else if (age >= 16 && age <= 18) {
+      return {
+        title: "Visionary Achiever",
+        icon: Target,
+        emoji: "🎯",
+      };
+    } else {
+      // Default for any other age
+      return {
+        title: "Super Explorer",
+        icon: Crown,
+        emoji: "✨",
+      };
+    }
+  };
+
+  const userAge = dashboardData?.currentUser?.age;
+  const levelInfo = getUserLevelInfo(userAge);
+  const LevelIcon = levelInfo.icon;
+
+  const getUserInitials = (firstName, lastName) => {
+    const firstInitial = firstName ? firstName.charAt(0).toUpperCase() : "";
+    const lastInitial = lastName ? lastName.charAt(0).toUpperCase() : "";
+    return `${firstInitial}${lastInitial}`;
+  };
+
+  const currentUser = dashboardData?.currentUser;
+  const userImage = currentUser?.image;
+  const userInitials = getUserInitials(
+    currentUser?.firstName,
+    currentUser?.lastName
+  );
   return (
     <>
       <PageMetadata
@@ -43,7 +125,7 @@ const Home = () => {
               <div className="relative inline-block">
                 <div className="w-28 h-28 rounded-full mx-auto relative">
                   {/* Animated Ring */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#FFC107]/40 via-[#FF4081]/40 to-[#4CAF50]/40 rounded-full animate-pulse"></div>
+                  {/* <div className="absolute inset-0 bg-gradient-to-br from-[#FFC107]/40 via-[#FF4081]/40 to-[#4CAF50]/40 rounded-full animate-pulse"></div> */}
                   {/* Floating Bubbles */}
                   <div className="absolute -top-4 -right-2 w-6 h-6 bg-[#1A73E8]/30 rounded-full animate-bounce"></div>
                   <div
@@ -55,11 +137,29 @@ const Home = () => {
                     style={{ animationDelay: "0.4s" }}
                   ></div>
 
-                  <img
-                    className="w-full h-full rounded-full border-4 border-[#FFC107] object-cover"
-                    src="https://storage.googleapis.com/uxpilot-auth.appspot.com/83dc32b293-ed23666f72dd44ce7bc8.png"
-                    alt="happy smiling kid girl avatar with pigtails, cute cartoon style, pastel colors, white background"
-                  />
+                  {/* Conditional Avatar Display */}
+                  {userImage ? (
+                    <img
+                      className="w-full h-full rounded-full border-4 border-[#FFC107] object-cover"
+                      src={userImage}
+                      alt={`${currentUser?.firstName} ${currentUser?.lastName} avatar`}
+                      onError={(e) => {
+                        // If image fails to load, hide it and show initials instead
+                        e.target.style.display = "none";
+                        e.target.nextSibling.style.display = "flex";
+                      }}
+                    />
+                  ) : null}
+
+                  {/* Initials Fallback */}
+                  <div
+                    className={`w-full h-full rounded-full border-4 border-[#FFC107] bg-gradient-to-br from-[#1A73E8] to-[#4CAF50] flex items-center justify-center text-white text-2xl font-bold ${
+                      userImage ? "hidden" : "flex"
+                    }`}
+                    style={{ display: userImage ? "none" : "flex" }}
+                  >
+                    {userInitials}
+                  </div>
                 </div>
                 {/* Achievement Badge */}
                 <div className="absolute -bottom-1 -right-1 bg-gradient-to-r from-[#FFC107] to-[#FF4081] rounded-full p-2.5 shadow-lg">
@@ -68,24 +168,27 @@ const Home = () => {
               </div>
 
               <h3 className="text-xl font-semibold mt-4 text-[#212121]">
-                Emily's Garden
+                {dashboardData?.currentUser?.firstName +
+                  " " +
+                  dashboardData?.currentUser?.lastName}
               </h3>
-              <p className="text-sm text-gray-500 flex items-center justify-center gap-1">
-                <span className="text-[#FFC107]">✨</span>
-                Super Explorer Level 5
+              <p className="text-sm text-gray-500 flex items-center justify-center gap-2">
+                <span className="text-[#FFC107]">{levelInfo.emoji}</span>
+                <LevelIcon size={14} className="text-[#FFC107]" />
+                {levelInfo.title}
               </p>
 
               <div className="mt-6 w-full grid grid-cols-2 gap-4">
                 <div className="bg-[#1A73E8]/5 rounded-xl text-center flex flex-col items-center justify-center px-3 py-1">
-                  <div className="text-2xl font-bold text-[#1A73E8]">12</div>
-                  <div className="text-xs text-gray-500">Magic Badges</div>
+                  <div className="text-2xl font-bold text-[#1A73E8]">0</div>
+                  <div className="text-xs text-gray-500">Badges</div>
                 </div>
                 {/* <div className="bg-[#FF4081]/5 rounded-xl text-center flex flex-col items-center justify-center px-3">
                   <div className="text-2xl font-bold text-[#FF4081]">89</div>
                   <div className="text-xs text-gray-500">Adventures</div>
                 </div> */}
                 <div className="bg-[#FFC107]/5 rounded-xl flex flex-col items-center justify-center px-3 py-1">
-                  <div className="text-2xl font-bold text-[#FFC107]">156</div>
+                  <div className="text-2xl font-bold text-[#FFC107]">0</div>
                   <div className="text-xs text-gray-500">Stars</div>
                 </div>
               </div>
@@ -150,7 +253,7 @@ const Home = () => {
             </div>
 
             {/* Badges Showcase */}
-            <div
+            {/* <div
               id="badges-showcase"
               className="bg-white rounded-2xl p-6 shadow-sm"
             >
@@ -187,7 +290,7 @@ const Home = () => {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Main Content Area */}

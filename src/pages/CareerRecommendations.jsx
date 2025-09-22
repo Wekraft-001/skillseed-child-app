@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { PageMetadata } from "../components/PageMetadata";
 import {
   ArrowLeft,
@@ -12,16 +13,52 @@ import {
   Utensils,
   Rocket,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CareerDetailsModal from "../components/CareerDetailsModal";
 
+const LoadingScreen = () => (
+  <div className="min-h-screen bg-[#F5F7FA] flex items-center justify-center">
+    <div className="bg-white rounded-2xl p-8 flex flex-col items-center shadow-2xl">
+      <div className="relative mb-4">
+        <div className="w-16 h-16 border-4 border-blue-200 rounded-full animate-spin border-t-blue-500"></div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-2xl animate-pulse">🤖</span>
+        </div>
+      </div>
+      <div className="text-gray-700 font-medium text-lg mb-2">
+        Getting your career recommendations
+      </div>
+      <div className="flex space-x-1">
+        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+        <div
+          className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"
+          style={{ animationDelay: "0.1s" }}
+        ></div>
+        <div
+          className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"
+          style={{ animationDelay: "0.2s" }}
+        ></div>
+      </div>
+    </div>
+  </div>
+);
+
 const CareerRecommendation = () => {
+  const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+  const token = localStorage.getItem("childToken");
   const navigate = useNavigate();
+  const location = useLocation();
   const [selectedCareer, setSelectedCareer] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [recommendations, setRecommendations] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const careerData = {
+  const { analysis, answers, quizId, ageRange, user } = location.state || {};
+  const userId = user?._id;
+
+  const careerData1 = {
     artist: {
       id: "artist",
       title: "Artist",
@@ -76,8 +113,160 @@ const CareerRecommendation = () => {
     },
   };
 
-  const handleCareerClick = (careerId) => {
-    setSelectedCareer(careerData[careerId] || null);
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      if (!quizId) {
+        setError("Quiz ID not found. Please take the quiz first.");
+        setLoading(false);
+        return;
+      }
+
+      if (!userId) {
+        setError("User ID not found. Please take the quiz first.");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `${apiURL}/ai/career-recommendations`,
+          {
+            params: {
+              childId: userId,
+              quizId: quizId,
+            },
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(response.data);
+        setRecommendations(response.data);
+      } catch (error) {
+        console.error("Failed to fetch recommendations:", error);
+        setError("Failed to load recommendations. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecommendations();
+  }, [apiURL, token, quizId, userId]);
+
+  if (!quizId && !loading) {
+    return (
+      <div className="min-h-screen bg-[#F5F7FA] flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-xl text-gray-600 mb-4">
+            No quiz data found. Please take the quiz first.
+          </p>
+          <button
+            onClick={() => navigate("/quizHome")}
+            className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600"
+          >
+            Take Quiz
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Loading state
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#F5F7FA] flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-xl text-red-600 mb-4">{error}</p>
+          <div className="space-x-4">
+            <button
+              onClick={() => window.location.reload()}
+              className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600"
+            >
+              Try Again
+            </button>
+            <button
+              onClick={() => navigate("/results")}
+              className="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600"
+            >
+              Back to Results
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Helper function to get career icon based on title
+  const getCareerIcon = (title) => {
+    const titleLower = title.toLowerCase();
+    if (titleLower.includes("artist") || titleLower.includes("art"))
+      return "🎨";
+    if (titleLower.includes("scientist") || titleLower.includes("research"))
+      return "🔬";
+    if (titleLower.includes("teacher") || titleLower.includes("education"))
+      return "👩‍🏫";
+    if (titleLower.includes("doctor") || titleLower.includes("medical"))
+      return "👨‍⚕️";
+    if (titleLower.includes("engineer") || titleLower.includes("technology"))
+      return "👨‍💻";
+    if (titleLower.includes("chef") || titleLower.includes("cook")) return "🍰";
+    if (titleLower.includes("astronaut") || titleLower.includes("space"))
+      return "🚀";
+    if (titleLower.includes("vet") || titleLower.includes("animal"))
+      return "🐾";
+    if (titleLower.includes("musician") || titleLower.includes("music"))
+      return "🎵";
+    if (titleLower.includes("writer") || titleLower.includes("author"))
+      return "✍️";
+    return "⭐"; // Default icon
+  };
+
+  // Helper function to get career color based on index
+  const getCareerColor = (index) => {
+    const colors = [
+      {
+        bg: "bg-[#1A73E8]",
+        hover: "hover:bg-[#1557b0]",
+        accent: "bg-[#1A73E8]/10",
+      },
+      {
+        bg: "bg-[#4CAF50]",
+        hover: "hover:bg-[#45a049]",
+        accent: "bg-[#4CAF50]/10",
+      },
+      {
+        bg: "bg-[#FF4081]",
+        hover: "hover:bg-[#e91e63]",
+        accent: "bg-[#FF4081]/10",
+      },
+      {
+        bg: "bg-[#9C27B0]",
+        hover: "hover:bg-[#7b1fa2]",
+        accent: "bg-[#9C27B0]/10",
+      },
+      {
+        bg: "bg-[#FF5722]",
+        hover: "hover:bg-[#e64a19]",
+        accent: "bg-[#FF5722]/10",
+      },
+      {
+        bg: "bg-[#607D8B]",
+        hover: "hover:bg-[#546e7a]",
+        accent: "bg-[#607D8B]/10",
+      },
+    ];
+    return colors[index % colors.length];
+  };
+
+  const handleCareerClick = (career) => {
+    setSelectedCareer(career);
     setIsModalOpen(true);
   };
 
@@ -90,7 +279,6 @@ const CareerRecommendation = () => {
       );
     }, 100);
   };
-
   return (
     <>
       <PageMetadata
@@ -157,13 +345,14 @@ const CareerRecommendation = () => {
                   AI Analysis Complete!
                 </h2>
                 <p className="text-gray-600 max-w-2xl mx-auto">
-                  Our smart AI has analyzed your interests, skills, and
-                  personality to find the perfect career matches for you. Here's
-                  what we discovered about you!
+                  Our AI has analyzed your quiz responses to find the perfect
+                  career matches.
+                  {recommendations?.careers?.length &&
+                    ` We found ${recommendations.careers.length} great options for you!`}
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+              {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
                 <div className="bg-gradient-to-br from-[#1A73E8]/10 to-[#1A73E8]/5 rounded-2xl p-6 text-center">
                   <div className="text-3xl mb-3">🎨</div>
                   <h3 className="font-semibold text-[#212121] mb-2">
@@ -193,7 +382,14 @@ const CareerRecommendation = () => {
                     You work well with others and love helping people!
                   </p>
                 </div>
-              </div>
+              </div> */}
+              {recommendations?.analysis && (
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-6">
+                  <p className="text-gray-700 leading-relaxed text-center">
+                    {recommendations.analysis}
+                  </p>
+                </div>
+              )}
             </div>
           </section>
 
@@ -203,7 +399,7 @@ const CareerRecommendation = () => {
               🌟 Perfect Careers For You! 🌟
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className=" grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
               {/* Career Card 1 */}
               <div className="career-card bg-white rounded-3xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 relative overflow-hidden cursor-pointer">
                 <div className="absolute top-4 right-4 w-8 h-8 bg-[#1A73E8]/10 rounded-full animate-pulse"></div>
@@ -511,12 +707,105 @@ const CareerRecommendation = () => {
                 </button>
               </div>
             </div>
+
+            {recommendations?.careers && recommendations.careers.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {recommendations.careers.map((career, index) => {
+                  const colorScheme = getCareerColor(index);
+                  const icon = getCareerIcon(career.title);
+
+                  return (
+                    <div
+                      key={career.id || index}
+                      className="career-card bg-white rounded-3xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 relative overflow-hidden cursor-pointer"
+                    >
+                      <div
+                        className={`absolute top-4 right-4 w-8 h-8 ${colorScheme.accent} rounded-full animate-pulse`}
+                      ></div>
+                      <div className="text-center mb-4">
+                        <div className="text-5xl mb-3">{icon}</div>
+                        <h3 className="text-xl font-bold text-[#212121] mb-2">
+                          {career.title}
+                        </h3>
+                        {career.matchPercentage && (
+                          <div className="flex justify-center mb-3">
+                            <div className="flex">
+                              {[...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`w-4 h-4 ${
+                                    i < Math.floor(career.matchPercentage / 20)
+                                      ? "fill-[#FFC107] text-[#FFC107]"
+                                      : "text-gray-300"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                            <span className="ml-2 text-sm text-gray-600">
+                              {career.matchPercentage}% Match
+                            </span>
+                          </div>
+                        )}
+                        <p className="text-gray-600 text-sm mb-4">
+                          {career.description}
+                        </p>
+                      </div>
+
+                      <div className="space-y-3">
+                        {career.skills &&
+                          career.skills.slice(0, 3).map((skill, skillIndex) => (
+                            <div
+                              key={skillIndex}
+                              className="flex items-center gap-2"
+                            >
+                              <Star className="w-4 h-4 text-[#FFC107]" />
+                              <span className="text-sm text-gray-600">
+                                {skill}
+                              </span>
+                            </div>
+                          ))}
+                      </div>
+
+                      <button
+                        onClick={() => handleCareerClick(career)}
+                        className={`w-full mt-4 ${colorScheme.bg} text-white py-3 rounded-full font-medium ${colorScheme.hover} transition-colors`}
+                      >
+                        Learn More! ✨
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-gray-600 mb-4">
+                  No career recommendations available at the moment.
+                </p>
+                <button
+                  onClick={() => navigate("/quizHome")}
+                  className="bg-[#1A73E8] text-white px-6 py-3 rounded-lg hover:bg-[#1557b0]"
+                >
+                  Take Quiz Again
+                </button>
+              </div>
+            )}
           </section>
 
           {/* Action Buttons */}
           <section className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
-              onClick={() => navigate("/career-recommendation")}
+              onClick={() =>
+                navigate("/results", {
+                  state: { analysis, answers, quizId, ageRange, userId },
+                })
+              }
+              className="bg-white text-[#1A73E8] border-2 border-[#1A73E8] px-8 py-3 rounded-full font-medium hover:bg-[#1A73E8]/10 transition-colors flex items-center justify-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Results
+            </button>
+            <button
+              onClick={() => navigate("/quizHome")}
               className="bg-white text-[#1A73E8] border-2 border-[#1A73E8] px-8 py-3 rounded-full font-medium hover:bg-[#1A73E8]/10 transition-colors flex items-center justify-center gap-2"
             >
               <ArrowLeft className="w-4 h-4" />

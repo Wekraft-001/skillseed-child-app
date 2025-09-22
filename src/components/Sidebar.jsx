@@ -86,7 +86,11 @@ const Sidebar = () => {
       label: "Dashboard",
       path: "/home",
     },
-    { icon: <Star className="w-5 h-5 mr-2" />, label: "Quiz", path: "/quiz" },
+    {
+      icon: <Star className="w-5 h-5 mr-2" />,
+      label: "Quiz",
+      path: "/quizHome",
+    },
     {
       icon: <Activity className="w-5 h-5 mr-2" />,
       label: "Activities",

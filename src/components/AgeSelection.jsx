@@ -36,8 +36,8 @@ const AgeSelection = ({ selectedAge, onAgeSelect, onContinue }) => {
       animation: "animate-ping",
     },
     {
-      range: "16-17",
-      title: "Ages 16 - 17",
+      range: "16-18",
+      title: "Ages 16 - 18",
       subtitle: "Visionary Achievers 👑",
       description:
         "Advanced assessments focusing on values, skills, and future career pathways!",
@@ -130,7 +130,7 @@ const AgeSelection = ({ selectedAge, onAgeSelect, onContinue }) => {
 
         {/* Continue Button */}
         <div className="text-center">
-          <button
+          {/* <button
             onClick={onContinue}
             className={`bg-gradient-to-r from-[#1A73E8] to-[#4CAF50] text-white px-12 py-4 rounded-full text-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all ${
               !selectedAge ? "opacity-50 cursor-not-allowed" : ""
@@ -140,7 +140,7 @@ const AgeSelection = ({ selectedAge, onAgeSelect, onContinue }) => {
             <i className="fa-solid fa-rocket mr-3"></i>
             Start My Quiz Adventure!
             <i className="fa-solid fa-arrow-right ml-3"></i>
-          </button>
+          </button> */}
 
           <div className="mt-6 flex justify-center items-center gap-4 text-gray-500">
             <div className="flex items-center gap-2">

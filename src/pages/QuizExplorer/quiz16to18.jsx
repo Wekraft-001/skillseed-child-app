@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Quiz16to17 = () => {
+const Quiz16to18 = () => {
   const navigate = useNavigate();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState([]);
@@ -285,4 +285,4 @@ const Quiz16to17 = () => {
   );
 };
 
-export default Quiz16to17;
+export default Quiz16to18;

@@ -42,12 +42,40 @@ const Signin = () => {
     setIsLoading(true);
     setErrorMessage(null);
     const url = `${apiURL}/auth/child/signin`;
+
     try {
       const response = await axios.post(url, loginDetails);
-      // console.log(response, "response");
-      let accessToken = response.data.access_token;
+      // console.log(response);
+      const accessToken = response.data.access_token;
+      const childAge = response.data.user.age;
       localStorage.setItem("childToken", accessToken);
-      navigate("/home");
+      localStorage.setItem("childAge", childAge);
+
+      // Check if user has completed any quizzes
+      try {
+        const dashboardResponse = await axios.get(
+          `${apiURL}/student/dashboard`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        // Check if quizzes array is empty - new user should go to quizHome
+        const quizzes = dashboardResponse.data.quizzes;
+        if (!quizzes || quizzes.length === 0) {
+          navigate("/quizHome");
+        } else {
+          // User has completed quizzes -> go to home
+          navigate("/home");
+        }
+      } catch (dashboardError) {
+        // If dashboard call fails for any reason, redirect to home as fallback
+        console.error("Dashboard API error:", dashboardError);
+        navigate("/home");
+      }
     } catch (error) {
       console.error("Error in API call:", error);
       setErrorMessage("Login failed. Please check your credentials.");

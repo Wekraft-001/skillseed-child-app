@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 import {
   Card,
   CardHeader,
@@ -16,336 +18,370 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../components/ui/dialog";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "../components/ui/sheet";
-import {
-  FontAwesomeAward,
-  FontAwesomeCalculator,
-  FontAwesomeChartLine,
-  FontAwesomeClock,
-  FontAwesomeMicroscope,
-  FontAwesomeTasks,
-} from "../components/ui/font-awesome-icons";
 import { Button } from "../components/ui/button";
+import { Clock, Star, Play } from "lucide-react";
 
 const Activities = () => {
+  const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+  const token = localStorage.getItem("childToken");
+  const [currentStep, setCurrentStep] = useState("tutorial");
+  const [selectedActivity, setSelectedActivity] = useState(null);
+
+  const getActivities = async () => {
+    const res = await axios.get(`${apiURL}/student/dashboard/challenges`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(res.data);
+    return res.data;
+  };
+
+  const {
+    data: activities = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["activities"],
+    queryFn: getActivities,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // Convert YouTube URL to embed format
+  const getYouTubeEmbedUrl = (url) => {
+    if (!url) return "";
+    const videoId = url.match(
+      /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|youtube\.com\/shorts\/)([^"&?\/\s]{11})/
+    );
+    if (videoId && videoId[1]) {
+      return `https://www.youtube.com/embed/${videoId[1]}`;
+    }
+    return url;
+  };
+
+  const handleStartActivity = (activity) => {
+    setSelectedActivity(activity);
+    setCurrentStep("tutorial");
+  };
+
+  const handleStartProject = () => {
+    setCurrentStep("project");
+  };
+
+  const handleCompleteProject = () => {
+    setCurrentStep("completed");
+  };
+
+  const resetFlow = () => {
+    setCurrentStep("tutorial");
+    setSelectedActivity(null);
+  };
+
+  // Tutorial Step Component
+  const TutorialStep = ({ activity }) => (
+    <div className="space-y-4">
+      <div className="aspect-video w-full rounded-xl overflow-hidden bg-gray-100">
+        {activity.videoTutorialUrl ? (
+          <iframe
+            src={getYouTubeEmbedUrl(activity.videoTutorialUrl)}
+            className="w-full h-full"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title={`${activity.title} Tutorial`}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-500">
+            <Play className="w-12 h-12 mb-2" />
+            <p>Video tutorial not available</p>
+          </div>
+        )}
+      </div>
+
+      <div className="space-y-3">
+        <h3 className="text-xl font-bold">Watch the Tutorial First!</h3>
+        <p className="text-gray-600">
+          Learn how to complete "{activity.title}" by watching this helpful video tutorial.
+        </p>
+
+        <div className="flex flex-wrap gap-2 text-sm">
+          <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full font-medium">
+            {activity.theme}
+          </span>
+          <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full">
+            {activity.difficultyLevel}
+          </span>
+          <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full">
+            Age {activity.ageRange}
+          </span>
+          <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full">
+            ~{activity.estimatedTime} min
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Project Step Component
+  const ProjectStep = ({ activity }) => (
+    <div className="space-y-4">
+      <div className="text-center">
+        <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Play className="w-8 h-8 text-white" />
+        </div>
+        <h3 className="text-2xl font-bold text-gray-900 mb-2">Let's Build!</h3>
+        <p className="text-gray-600 mb-6">
+          Now it's time to create your own {activity.title}!
+        </p>
+      </div>
+
+      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100">
+        <h4 className="font-bold text-lg mb-3 text-gray-900">Project: {activity.title}</h4>
+        <p className="text-gray-700 mb-4">{activity.description}</p>
+
+        <div className="space-y-3">
+          <p className="font-semibold text-gray-900">What you'll learn:</p>
+          <ul className="text-gray-600 space-y-2">
+            <li className="flex items-start">
+              <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+              Hands-on {activity.theme.toLowerCase()} experience
+            </li>
+            <li className="flex items-start">
+              <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+              Problem-solving and creativity
+            </li>
+            <li className="flex items-start">
+              <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+              Following step-by-step instructions
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg">
+        <div className="flex items-start">
+          <span className="text-2xl mr-3">💡</span>
+          <div>
+            <p className="font-semibold text-amber-800">Pro Tip:</p>
+            <p className="text-amber-700">
+              Take your time and don't forget to have fun! You can always rewatch the tutorial if needed.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Completion Step Component
+  const CompletionStep = ({ activity }) => (
+    <div className="space-y-6 text-center">
+      <div className="w-24 h-24 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto">
+        <span className="text-4xl">🏆</span>
+      </div>
+      <div>
+        <h3 className="text-3xl font-bold text-green-600 mb-2">Congratulations!</h3>
+        <p className="text-gray-600 text-lg">
+          You've successfully completed the {activity.title} project!
+        </p>
+      </div>
+
+      <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-xl border border-green-200">
+        <h4 className="font-bold text-green-800 mb-2 text-lg">
+          Achievement Unlocked!
+        </h4>
+        <div className="flex items-center justify-center space-x-2">
+          <Star className="w-5 h-5 text-yellow-500 fill-current" />
+          <span className="text-green-700 font-medium">
+            {activity.theme} Explorer Badge earned!
+          </span>
+          <Star className="w-5 h-5 text-yellow-500 fill-current" />
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        <p className="font-semibold text-gray-900">What's next?</p>
+        <p className="text-gray-600">
+          Try another exciting activity or share your creation with friends and family!
+        </p>
+      </div>
+    </div>
+  );
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-12">
+        <div className="flex justify-center items-center h-64">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading your fun activities...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="container mx-auto px-4 py-12">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">Oops! Something went wrong loading activities.</p>
+          <Button onClick={() => refetch()}>Try Again</Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-3xl font-bold mb-8">Fun Learning Activities</h1>
+    <div className="container mx-auto px-4 py-8">
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">Fun Learning Activities</h1>
+        <p className="text-gray-600 text-lg">Discover exciting projects and learn something new!</p>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Activity 1 */}
-        <Card className="overflow-hidden border-2 border-blue-100 shadow-md hover:shadow-lg transition-all">
-          <div className="h-48 overflow-hidden">
-            <img
-              src="/images/activities/space-explorer.jpg"
-              alt="Colorful planets and space elements with stars"
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                const target = e.target;
-                target.onerror = null;
-                target.src =
-                  "https://placehold.co/400x200/1e40af/ffffff?text=Space+Explorer";
-              }}
-            />
-          </div>
-          <CardHeader className="pb-2">
-            <div className="flex justify-between items-center mb-2">
-              <div className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">
-                10-15 min
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {activities.map((activity) => (
+          <Card
+            key={activity._id}
+            className="group overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 bg-white rounded-2xl"
+          >
+            <div className="relative h-48 overflow-hidden">
+              <img
+                src={activity.imageUrl}
+                alt={activity.title}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                onError={(e) => {
+                  e.target.src = `https://via.placeholder.com/400x300/4F46E5/ffffff?text=${encodeURIComponent(activity.title)}`;
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+              <div className="absolute top-4 right-4">
+                <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-gray-700">
+                  {activity.theme}
+                </span>
               </div>
-              <FontAwesomeTasks className="text-blue-500" />
             </div>
-            <CardTitle className="text-xl">Space Explorer Challenge</CardTitle>
-            <CardDescription>Build your astronomy knowledge!</CardDescription>
-          </CardHeader>
-          <CardContent className="text-sm">
-            Take a journey through our solar system and beyond! Learn about
-            planets, stars, and galaxies.
-          </CardContent>
-          <CardFooter className="pt-2 flex justify-between items-center">
-            <div className="flex items-center">
-              <div className="text-yellow-500 mr-1">⭐⭐⭐⭐⭐</div>
-              <span className="text-xs text-gray-500">(124)</span>
-            </div>
-            <Dialog>
-              <DialogTrigger asChild>
-                <button className="bg-blue-600 p-3 rounded-3xl text-white font-medium">
-                  Start
-                </button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Space Explorer Challenge</DialogTitle>
-                  <DialogDescription>
-                    Get ready for an exciting adventure through space!
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <p>This activity will help you learn about:</p>
-                  <ul className="list-disc pl-5 space-y-2">
-                    <li>The planets in our solar system</li>
-                    <li>Different types of stars</li>
-                    <li>Amazing space phenomena</li>
-                  </ul>
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <p className="text-sm text-blue-700">
-                      You'll earn a Space Explorer badge upon completion!
-                    </p>
+
+            <CardHeader className="pb-3">
+              <div className="flex justify-between items-start mb-2">
+                <CardTitle className="text-xl font-bold text-gray-900 line-clamp-2">
+                  {activity.title}
+                </CardTitle>
+              </div>
+            </CardHeader>
+
+            <CardContent className="pb-4">
+              <CardDescription className="text-gray-600 line-clamp-3 mb-4">
+                {activity.description}
+              </CardDescription>
+              
+              <div className="flex items-center justify-between text-sm text-gray-500">
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center">
+                    <Clock className="w-4 h-4 mr-1" />
+                    <span>{activity.estimatedTime} min</span>
                   </div>
+                  <span className="text-xs bg-gray-100 px-2 py-1 rounded">
+                    Age {activity.ageRange}
+                  </span>
                 </div>
-                <DialogFooter>
-                  <Button type="button" variant="outline">
-                    Cancel
+                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-medium">
+                  {activity.difficultyLevel}
+                </span>
+              </div>
+            </CardContent>
+
+            <CardFooter className="pt-0">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button 
+                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg"
+                    onClick={() => handleStartActivity(activity)}
+                  >
+                    Start Activity
                   </Button>
-                  <Button type="button">Begin Adventure</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </CardFooter>
-        </Card>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl font-bold">{selectedActivity?.title}</DialogTitle>
+                    <DialogDescription className="text-lg">
+                      {currentStep === "tutorial" && "Watch the tutorial to get started"}
+                      {currentStep === "project" && "Time to build your project!"}
+                      {currentStep === "completed" && "Project completed successfully!"}
+                    </DialogDescription>
+                  </DialogHeader>
 
-        {/* Activity 2 */}
-        <Card className="overflow-hidden border-2 border-purple-100 shadow-md hover:shadow-lg transition-all">
-          <div className="h-48 overflow-hidden">
-            <img
-              src="/images/activities/coding-robot.jpg"
-              alt="Kid-friendly coding interface with blocks and simple robot"
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                const target = e.target;
-                target.onerror = null;
-                target.src =
-                  "https://placehold.co/400x200/7e22ce/ffffff?text=Code+Your+Robot";
-              }}
-            />
-          </div>
-          <CardHeader className="pb-2">
-            <div className="flex justify-between items-center mb-2">
-              <div className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-medium">
-                20-30 min
-              </div>
-              <FontAwesomeAward className="text-purple-500" />
-            </div>
-            <CardTitle className="text-xl">Code Your Robot</CardTitle>
-            <CardDescription>Learn programming basics!</CardDescription>
-          </CardHeader>
-          <CardContent className="text-sm">
-            Program your virtual robot to navigate mazes and collect stars using
-            block-based coding!
-          </CardContent>
-          <CardFooter className="pt-2 flex justify-between items-center">
-            <div className="flex items-center">
-              <div className="text-yellow-500 mr-1">⭐⭐⭐⭐</div>
-              <span className="text-xs text-gray-500">(98)</span>
-            </div>
-            <Sheet>
-              <SheetTrigger asChild>
-                <button
-                  variant="default"
-                  className="bg-purple-600 hover:bg-purple-700 rounded-full p-3 text-white font-medium"
-                >
-                  Start
-                </button>
-              </SheetTrigger>
-              <SheetContent>
-                <SheetHeader>
-                  <SheetTitle>Code Your Robot</SheetTitle>
-                  <SheetDescription>
-                    Get ready to program your own virtual robot!
-                  </SheetDescription>
-                </SheetHeader>
-                <div className="py-6 space-y-4">
-                  <p>In this activity, you'll learn:</p>
-                  <ul className="list-disc pl-5 space-y-2">
-                    <li>Basic programming concepts</li>
-                    <li>Logical thinking and problem-solving</li>
-                    <li>How to control a virtual robot</li>
-                  </ul>
-                  <div className="bg-purple-50 p-4 rounded-lg">
-                    <p className="text-sm text-purple-700">
-                      Complete all levels to earn your Coding Badge!
-                    </p>
+                  <div className="py-6">
+                    {selectedActivity && (
+                      <>
+                        {currentStep === "tutorial" && (
+                          <TutorialStep activity={selectedActivity} />
+                        )}
+                        {currentStep === "project" && (
+                          <ProjectStep activity={selectedActivity} />
+                        )}
+                        {currentStep === "completed" && (
+                          <CompletionStep activity={selectedActivity} />
+                        )}
+                      </>
+                    )}
                   </div>
-                  <div className="flex flex-col gap-2 mt-4">
-                    <button
-                      variant="default"
-                      className="bg-purple-600 hover:bg-purple-700 w-full"
-                    >
-                      Start Coding
-                    </button>
-                    <button variant="outline" className="w-full">
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
-          </CardFooter>
-        </Card>
 
-        {/* Activity 3 */}
-        <Card className="overflow-hidden border-2 border-green-100 shadow-md hover:shadow-lg transition-all">
-          <div className="h-48 overflow-hidden">
-            <img
-              src="/images/activities/dinosaur-explorer.jpg"
-              alt="Colorful dinosaur exhibit with kid-friendly interactive elements"
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                const target = e.target;
-                target.onerror = null;
-                target.src =
-                  "https://placehold.co/400x200/16a34a/ffffff?text=Dinosaur+Time+Machine";
-              }}
-            />
-          </div>
-          <CardHeader className="pb-2">
-            <div className="flex justify-between items-center mb-2">
-              <div className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium">
-                15-20 min
-              </div>
-              <FontAwesomeClock className="text-green-500" />
-            </div>
-            <CardTitle className="text-xl">Dinosaur Time Machine</CardTitle>
-            <CardDescription>Travel back to prehistoric times!</CardDescription>
-          </CardHeader>
-          <CardContent className="text-sm">
-            Discover amazing dinosaurs that once roamed the Earth and learn
-            about paleontology.
-          </CardContent>
-          <CardFooter className="pt-2 flex justify-between items-center">
-            <div className="flex items-center">
-              <div className="text-yellow-500 mr-1">⭐⭐⭐⭐⭐</div>
-              <span className="text-xs text-gray-500">(156)</span>
-            </div>
-            <button
-              variant="default"
-              className="bg-green-600 hover:bg-green-700 rounded-full p-3 text-white font-medium"
-            >
-              Start
-            </button>
-          </CardFooter>
-        </Card>
-
-        {/* Activity 4 */}
-        <Card className="overflow-hidden border-2 border-amber-100 shadow-md hover:shadow-lg transition-all">
-          <div className="h-48 overflow-hidden">
-            <img
-              src="/images/activities/math-adventure.jpg"
-              alt="Interactive math game with friendly cartoon numbers and shapes"
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                const target = e.target;
-                target.onerror = null;
-                target.src =
-                  "https://placehold.co/400x200/d97706/ffffff?text=Math+Adventure";
-              }}
-            />
-          </div>
-          <CardHeader className="pb-2">
-            <div className="flex justify-between items-center mb-2">
-              <div className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-medium">
-                10-15 min
-              </div>
-              <FontAwesomeChartLine className="text-amber-500" />
-            </div>
-            <CardTitle className="text-xl">Math Adventure</CardTitle>
-            <CardDescription>Make math fun and exciting!</CardDescription>
-          </CardHeader>
-          <CardContent className="text-sm">
-            Solve puzzles, play games, and discover how math is used in everyday
-            life.
-          </CardContent>
-          <CardFooter className="pt-2 flex justify-between items-center">
-            <div className="flex items-center">
-              <div className="text-yellow-500 mr-1">⭐⭐⭐⭐</div>
-              <span className="text-xs text-gray-500">(112)</span>
-            </div>
-            <button className="bg-amber-600 hover:bg-amber-700 rounded-full p-3 text-white font-medium">
-              Start
-            </button>
-          </CardFooter>
-        </Card>
-
-        {/* Activity 5 */}
-        <Card className="overflow-hidden border-2 border-pink-100 shadow-md hover:shadow-lg transition-all">
-          <div className="h-48 overflow-hidden">
-            <img
-              src="/images/activities/science-lab.jpg"
-              alt="Science experiment with bubbling beakers and colorful liquids"
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                const target = e.target;
-                target.onerror = null;
-                target.src =
-                  "https://placehold.co/400x200/0284c7/ffffff?text=Science+Lab";
-              }}
-            />
-          </div>
-          <CardHeader className="pb-2">
-            <div className="flex justify-between items-center mb-2">
-              <div className="bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-xs font-medium">
-                15-25 min
-              </div>
-              <FontAwesomeCalculator className="text-pink-500" />
-            </div>
-            <CardTitle className="text-xl">Digital Art Studio</CardTitle>
-            <CardDescription>Express your creativity!</CardDescription>
-          </CardHeader>
-          <CardContent className="text-sm">
-            Learn digital art techniques and create amazing artwork using our
-            virtual art tools.
-          </CardContent>
-          <CardFooter className="pt-2 flex justify-between items-center">
-            <div className="flex items-center">
-              <div className="text-yellow-500 mr-1">⭐⭐⭐⭐⭐</div>
-              <span className="text-xs text-gray-500">(143)</span>
-            </div>
-            <button className="bg-pink-600 hover:bg-pink-700 rounded-full p-3 text-white font-medium">
-              Start
-            </button>
-          </CardFooter>
-        </Card>
-
-        {/* Activity 6 */}
-        <Card className="overflow-hidden border-2 border-cyan-100 shadow-md hover:shadow-lg transition-all">
-          <div className="h-48 overflow-hidden">
-            <img
-              src="https://storage.googleapis.com/uxpilot-auth.appspot.com/fac6828383-fbe0cb12639544fa9808.png"
-              alt="Interactive science lab with kid-friendly experiments and cartoon science equipment"
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <CardHeader className="pb-2">
-            <div className="flex justify-between items-center mb-2">
-              <div className="bg-cyan-100 text-cyan-700 px-3 py-1 rounded-full text-xs font-medium">
-                20-30 min
-              </div>
-              <FontAwesomeMicroscope className="text-cyan-500" />
-            </div>
-            <CardTitle className="text-xl">Science Explorers Lab</CardTitle>
-            <CardDescription>Conduct awesome experiments!</CardDescription>
-          </CardHeader>
-          <CardContent className="text-sm">
-            Become a junior scientist and learn through fun virtual experiments
-            and discoveries.
-          </CardContent>
-          <CardFooter className="pt-2 flex justify-between items-center">
-            <div className="flex items-center">
-              <div className="text-yellow-500 mr-1">⭐⭐⭐⭐</div>
-              <span className="text-xs text-gray-500">(89)</span>
-            </div>
-            <button className="bg-cyan-600 hover:bg-cyan-700 rounded-full p-3 text-white font-medium">
-              Start
-            </button>
-          </CardFooter>
-        </Card>
+                  <DialogFooter className="flex flex-col sm:flex-row gap-3">
+                    {currentStep === "tutorial" && (
+                      <>
+                        <Button type="button" variant="outline" onClick={resetFlow} className="flex-1">
+                          Cancel
+                        </Button>
+                        <Button 
+                          type="button" 
+                          onClick={handleStartProject}
+                          className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                        >
+                          Start Project
+                        </Button>
+                      </>
+                    )}
+                    {currentStep === "project" && (
+                      <>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => setCurrentStep("tutorial")}
+                          className="flex-1"
+                        >
+                          Back to Tutorial
+                        </Button>
+                        <Button 
+                          type="button" 
+                          onClick={handleCompleteProject}
+                          className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                        >
+                          Complete Project
+                        </Button>
+                      </>
+                    )}
+                    {currentStep === "completed" && (
+                      <>
+                        <Button type="button" variant="outline" onClick={resetFlow} className="flex-1">
+                          Close
+                        </Button>
+                        <Button 
+                          type="button" 
+                          onClick={resetFlow}
+                          className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                        >
+                          Try Another Activity
+                        </Button>
+                      </>
+                    )}
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </CardFooter>
+          </Card>
+        ))}
       </div>
     </div>
   );
