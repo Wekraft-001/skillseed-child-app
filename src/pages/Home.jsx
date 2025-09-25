@@ -49,6 +49,23 @@ const Home = () => {
     staleTime: 5 * 60 * 1000,
   });
 
+  const getRewards = async () => {
+    const res = await axios.get(`${apiURL}/student/rewards`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(res.data);
+    return res.data;
+  };
+
+  const { data: rewards = {} } = useQuery({
+    queryKey: ["rewards"],
+    queryFn: getRewards,
+    staleTime: 5 * 60 * 1000,
+  });
+
   const getUserLevelInfo = (age) => {
     if (age >= 6 && age <= 8) {
       return {
@@ -180,7 +197,9 @@ const Home = () => {
 
               <div className="mt-6 w-full grid grid-cols-2 gap-4">
                 <div className="bg-[#1A73E8]/5 rounded-xl text-center flex flex-col items-center justify-center px-3 py-1">
-                  <div className="text-2xl font-bold text-[#1A73E8]">0</div>
+                  <div className="text-2xl font-bold text-[#1A73E8]">
+                    {rewards?.totalBadges}
+                  </div>
                   <div className="text-xs text-gray-500">Badges</div>
                 </div>
                 {/* <div className="bg-[#FF4081]/5 rounded-xl text-center flex flex-col items-center justify-center px-3">
@@ -188,7 +207,9 @@ const Home = () => {
                   <div className="text-xs text-gray-500">Adventures</div>
                 </div> */}
                 <div className="bg-[#FFC107]/5 rounded-xl flex flex-col items-center justify-center px-3 py-1">
-                  <div className="text-2xl font-bold text-[#FFC107]">0</div>
+                  <div className="text-2xl font-bold text-[#FFC107]">
+                    {rewards?.totalStars}
+                  </div>
                   <div className="text-xs text-gray-500">Stars</div>
                 </div>
               </div>

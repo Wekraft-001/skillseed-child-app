@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -24,8 +24,21 @@ import { Clock, Star, Play } from "lucide-react";
 const Activities = () => {
   const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
   const token = localStorage.getItem("childToken");
+  const age = parseInt(localStorage.getItem("childAge")) || 0;
   const [currentStep, setCurrentStep] = useState("tutorial");
   const [selectedActivity, setSelectedActivity] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCompleting, setIsCompleting] = useState(false);
+
+  // Function to determine if community is suitable for child's age
+  const isAgeAppropriate = (ageRange, childAge) => {
+    if (!ageRange || !childAge) return true; // Show all if age data is missing
+
+    const [minAge, maxAge] = ageRange
+      .split("-")
+      .map((age) => parseInt(age.trim()));
+    return childAge >= minAge && childAge <= maxAge;
+  };
 
   const getActivities = async () => {
     const res = await axios.get(`${apiURL}/student/dashboard/challenges`, {
@@ -49,6 +62,15 @@ const Activities = () => {
     staleTime: 5 * 60 * 1000,
   });
 
+  // Filter communities based on child's age
+  const filteredActivities = useMemo(() => {
+    if (!Array.isArray(activities)) return [];
+
+    return activities.filter((activity) =>
+      isAgeAppropriate(activity.ageRange, age)
+    );
+  }, [activities, age]);
+
   // Convert YouTube URL to embed format
   const getYouTubeEmbedUrl = (url) => {
     if (!url) return "";
@@ -64,19 +86,49 @@ const Activities = () => {
   const handleStartActivity = (activity) => {
     setSelectedActivity(activity);
     setCurrentStep("tutorial");
+    setIsModalOpen(true);
   };
 
   const handleStartProject = () => {
     setCurrentStep("project");
   };
 
-  const handleCompleteProject = () => {
-    setCurrentStep("completed");
+  const handleCompleteProject = async () => {
+    if (!selectedActivity) return;
+
+    setIsCompleting(true);
+    try {
+      const response = await axios.post(
+        `${apiURL}/student/rewards/complete-challenge/${selectedActivity._id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response, "checking for complete endpoint");
+      setCurrentStep("completed");
+    } catch (error) {
+      console.error("Error completing project:", error);
+      // You might want to show an error message to the user here
+      alert("Failed to mark project as complete. Please try again.");
+    } finally {
+      setIsCompleting(false);
+    }
   };
 
   const resetFlow = () => {
     setCurrentStep("tutorial");
     setSelectedActivity(null);
+    setIsModalOpen(false);
+  };
+
+  const handleTryAnotherActivity = () => {
+    // setCurrentStep("tutorial");
+    // setSelectedActivity(null);
+    setIsModalOpen(false);
   };
 
   // Tutorial Step Component
@@ -103,7 +155,8 @@ const Activities = () => {
       <div className="space-y-3">
         <h3 className="text-xl font-bold">Watch the Tutorial First!</h3>
         <p className="text-gray-600">
-          Learn how to complete "{activity.title}" by watching this helpful video tutorial.
+          Learn how to complete "{activity.title}" by watching this helpful
+          video tutorial.
         </p>
 
         <div className="flex flex-wrap gap-2 text-sm">
@@ -138,7 +191,9 @@ const Activities = () => {
       </div>
 
       <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100">
-        <h4 className="font-bold text-lg mb-3 text-gray-900">Project: {activity.title}</h4>
+        <h4 className="font-bold text-lg mb-3 text-gray-900">
+          Project: {activity.title}
+        </h4>
         <p className="text-gray-700 mb-4">{activity.description}</p>
 
         <div className="space-y-3">
@@ -166,7 +221,8 @@ const Activities = () => {
           <div>
             <p className="font-semibold text-amber-800">Pro Tip:</p>
             <p className="text-amber-700">
-              Take your time and don't forget to have fun! You can always rewatch the tutorial if needed.
+              Take your time and don't forget to have fun! You can always
+              rewatch the tutorial if needed.
             </p>
           </div>
         </div>
@@ -181,7 +237,9 @@ const Activities = () => {
         <span className="text-4xl">🏆</span>
       </div>
       <div>
-        <h3 className="text-3xl font-bold text-green-600 mb-2">Congratulations!</h3>
+        <h3 className="text-3xl font-bold text-green-600 mb-2">
+          Congratulations!
+        </h3>
         <p className="text-gray-600 text-lg">
           You've successfully completed the {activity.title} project!
         </p>
@@ -203,7 +261,8 @@ const Activities = () => {
       <div className="space-y-3">
         <p className="font-semibold text-gray-900">What's next?</p>
         <p className="text-gray-600">
-          Try another exciting activity or share your creation with friends and family!
+          Try another exciting activity or share your creation with friends and
+          family!
         </p>
       </div>
     </div>
@@ -226,7 +285,9 @@ const Activities = () => {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
-          <p className="text-red-600 mb-4">Oops! Something went wrong loading activities.</p>
+          <p className="text-red-600 mb-4">
+            Oops! Something went wrong loading activities.
+          </p>
           <Button onClick={() => refetch()}>Try Again</Button>
         </div>
       </div>
@@ -236,24 +297,30 @@ const Activities = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">Fun Learning Activities</h1>
-        <p className="text-gray-600 text-lg">Discover exciting projects and learn something new!</p>
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          Fun Learning Activities
+        </h1>
+        <p className="text-gray-600 text-lg">
+          Discover exciting projects and learn something new!
+        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {activities.map((activity) => (
+        {filteredActivities.map((activity) => (
           <Card
             key={activity._id}
             className="group overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 bg-white rounded-2xl"
           >
             <div className="relative h-48 overflow-hidden">
               <img
-                src={activity.imageUrl}
+                src={activity?.imageUrl}
                 alt={activity.title}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                onError={(e) => {
-                  e.target.src = `https://via.placeholder.com/400x300/4F46E5/ffffff?text=${encodeURIComponent(activity.title)}`;
-                }}
+                // onError={(e) => {
+                //   e.target.src = `https://via.placeholder.com/400x300/4F46E5/ffffff?text=${encodeURIComponent(
+                //     activity.title
+                //   )}`;
+                // }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
               <div className="absolute top-4 right-4">
@@ -275,7 +342,7 @@ const Activities = () => {
               <CardDescription className="text-gray-600 line-clamp-3 mb-4">
                 {activity.description}
               </CardDescription>
-              
+
               <div className="flex items-center justify-between text-sm text-gray-500">
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center">
@@ -293,9 +360,9 @@ const Activities = () => {
             </CardContent>
 
             <CardFooter className="pt-0">
-              <Dialog>
+              <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
-                  <Button 
+                  <Button
                     className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg"
                     onClick={() => handleStartActivity(activity)}
                   >
@@ -304,11 +371,16 @@ const Activities = () => {
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold">{selectedActivity?.title}</DialogTitle>
+                    <DialogTitle className="text-2xl font-bold">
+                      {selectedActivity?.title}
+                    </DialogTitle>
                     <DialogDescription className="text-lg">
-                      {currentStep === "tutorial" && "Watch the tutorial to get started"}
-                      {currentStep === "project" && "Time to build your project!"}
-                      {currentStep === "completed" && "Project completed successfully!"}
+                      {currentStep === "tutorial" &&
+                        "Watch the tutorial to get started"}
+                      {currentStep === "project" &&
+                        "Time to build your project!"}
+                      {currentStep === "completed" &&
+                        "Project completed successfully!"}
                     </DialogDescription>
                   </DialogHeader>
 
@@ -331,11 +403,16 @@ const Activities = () => {
                   <DialogFooter className="flex flex-col sm:flex-row gap-3">
                     {currentStep === "tutorial" && (
                       <>
-                        <Button type="button" variant="outline" onClick={resetFlow} className="flex-1">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={resetFlow}
+                          className="flex-1"
+                        >
                           Cancel
                         </Button>
-                        <Button 
-                          type="button" 
+                        <Button
+                          type="button"
                           onClick={handleStartProject}
                           className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                         >
@@ -353,23 +430,29 @@ const Activities = () => {
                         >
                           Back to Tutorial
                         </Button>
-                        <Button 
-                          type="button" 
+                        <Button
+                          type="button"
                           onClick={handleCompleteProject}
-                          className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                          disabled={isCompleting}
+                          className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:opacity-50"
                         >
-                          Complete Project
+                          {isCompleting ? "Completing..." : "Complete Project"}
                         </Button>
                       </>
                     )}
                     {currentStep === "completed" && (
                       <>
-                        <Button type="button" variant="outline" onClick={resetFlow} className="flex-1">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={resetFlow}
+                          className="flex-1"
+                        >
                           Close
                         </Button>
-                        <Button 
-                          type="button" 
-                          onClick={resetFlow}
+                        <Button
+                          type="button"
+                          onClick={handleTryAnotherActivity}
                           className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                         >
                           Try Another Activity
