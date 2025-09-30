@@ -1,79 +1,44 @@
+import React, { useState } from "react";
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-
-const Quiz13to15 = () => {
-  const navigate = useNavigate();
+const Quiz13to15 = ({ quiz, onAnswer, onSubmit, answers, isSubmitting }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState([]);
 
-  const questions = [
-    {
-      id: 1,
-      question: "What matters most to you in your future career?",
-      scenario: "Imagine you're 25 and looking back on your career choice...",
-      options: [
-        { text: "Making a real impact on society", icon: "fa-solid fa-globe", insight: "Social Impact Driven" },
-        { text: "Creative expression and innovation", icon: "fa-solid fa-lightbulb", insight: "Creative Innovator" },
-        { text: "Financial stability and growth", icon: "fa-solid fa-chart-line", insight: "Success Oriented" },
-        { text: "Work-life balance and flexibility", icon: "fa-solid fa-balance-scale", insight: "Balance Seeker" }
-      ]
-    },
-    {
-      id: 2,
-      question: "When facing a complex problem, your approach is to...",
-      scenario: "Think about how you handle challenging situations in school or life...",
-      options: [
-        { text: "Research thoroughly before acting", icon: "fa-solid fa-search", insight: "Analytical Thinker" },
-        { text: "Brainstorm creative solutions", icon: "fa-solid fa-brain", insight: "Creative Problem Solver" },
-        { text: "Seek advice from experts", icon: "fa-solid fa-users", insight: "Collaborative Learner" },
-        { text: "Jump in and learn by doing", icon: "fa-solid fa-rocket", insight: "Action-Oriented" }
-      ]
-    },
-    {
-      id: 3,
-      question: "What type of environment helps you thrive?",
-      scenario: "Consider where you feel most productive and energized...",
-      options: [
-        { text: "Quiet, focused individual work", icon: "fa-solid fa-user", insight: "Independent Worker" },
-        { text: "Dynamic team collaboration", icon: "fa-solid fa-people-group", insight: "Team Player" },
-        { text: "Fast-paced, high-energy setting", icon: "fa-solid fa-bolt", insight: "High-Energy Performer" },
-        { text: "Structured, organized environment", icon: "fa-solid fa-list", insight: "Structure Oriented" }
-      ]
-    },
-    {
-      id: 4,
-      question: "Which skill would you most like to master?",
-      scenario: "If you could become exceptional at one skill...",
-      options: [
-        { text: "Advanced technology and coding", icon: "fa-solid fa-code", insight: "Tech Enthusiast" },
-        { text: "Public speaking and leadership", icon: "fa-solid fa-microphone", insight: "Natural Leader" },
-        { text: "Design and visual communication", icon: "fa-solid fa-palette", insight: "Visual Communicator" },
-        { text: "Data analysis and research", icon: "fa-solid fa-chart-bar", insight: "Data-Driven Thinker" }
-      ]
-    },
-    {
-      id: 5,
-      question: "What motivates you to push through difficult challenges?",
-      scenario: "Reflect on what drives you when things get tough...",
-      options: [
-        { text: "The potential to help others", icon: "fa-solid fa-heart", insight: "Service-Minded" },
-        { text: "Personal growth and learning", icon: "fa-solid fa-seedling", insight: "Growth-Focused" },
-        { text: "Recognition and achievement", icon: "fa-solid fa-trophy", insight: "Achievement-Oriented" },
-        { text: "The thrill of discovery", icon: "fa-solid fa-magnifying-glass", insight: "Curiosity-Driven" }
-      ]
-    }
-  ];
+  const questions = quiz.questions;
 
-  const handleAnswer = (answer) => {
-    const newAnswers = [...answers, answer];
-    setAnswers(newAnswers);
+  if (!quiz || questions.length === 0) {
+    return <div>Loading quiz...</div>;
+  }
 
-    if (currentQuestion < questions.length - 1) {
+  const currentQuestionData = questions[currentQuestion];
+  const totalQuestions = questions.length;
+
+  console.log(currentQuestionData, "checking");
+
+  const handleAnswerClick = (answer) => {
+    if (isSubmitting) return;
+
+    onAnswer(currentQuestion, answer);
+
+    // Move to next question
+    if (currentQuestion < totalQuestions - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      navigate('/results');
+      // Quiz completed
+      onSubmit();
     }
+  };
+
+  // Icon options for answers
+  const getOptionIcon = (index) => {
+    const icons = [
+      "fa-solid fa-globe",
+      "fa-solid fa-lightbulb",
+      "fa-solid fa-heart",
+      "fa-solid fa-rocket",
+      "fa-solid fa-star",
+      "fa-solid fa-brain",
+    ];
+    return icons[index % icons.length];
   };
 
   return (
@@ -92,12 +57,16 @@ const Quiz13to15 = () => {
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
             <span className="text-sm font-medium text-gray-600">Progress</span>
-            <span className="text-sm font-medium text-[#FF4081]">{currentQuestion + 1}/{questions.length}</span>
+            <span className="text-sm font-medium text-[#FF4081]">
+              {currentQuestion + 1}/{totalQuestions}
+            </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
+            <div
               className="bg-gradient-to-r from-[#FF4081] to-[#E91E63] h-2 rounded-full transition-all duration-500"
-              style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
+              style={{
+                width: `${((currentQuestion + 1) / totalQuestions) * 100}%`,
+              }}
             ></div>
           </div>
         </div>
@@ -111,28 +80,51 @@ const Quiz13to15 = () => {
                 <span className="text-xl font-bold">{currentQuestion + 1}</span>
               </div>
               <div>
-                <h2 className="text-xl font-bold">{questions[currentQuestion].question}</h2>
-                <p className="text-pink-100 text-sm mt-1">{questions[currentQuestion].scenario}</p>
+                <h2 className="text-xl font-bold">
+                  {currentQuestionData.text || currentQuestionData.question}
+                </h2>
+                {currentQuestionData.scenario && (
+                  <p className="text-pink-100 text-sm mt-1">
+                    {currentQuestionData.scenario}
+                  </p>
+                )}
               </div>
             </div>
+            {isSubmitting && (
+              <p className="text-pink-100 text-sm text-center">
+                Processing your answer...
+              </p>
+            )}
           </div>
 
           {/* Options */}
           <div className="p-6">
             <div className="space-y-4">
-              {questions[currentQuestion].options.map((option, index) => (
+              {currentQuestionData.answers.map((answer, index) => (
                 <button
                   key={index}
-                  onClick={() => handleAnswer(option.text)}
-                  className="w-full bg-gray-50 hover:bg-gradient-to-r hover:from-[#FF4081]/10 hover:to-[#E91E63]/10 rounded-xl p-4 text-left transition-all duration-300 hover:shadow-lg border border-transparent hover:border-[#FF4081]/30 group"
+                  onClick={() => handleAnswerClick(answer)}
+                  disabled={isSubmitting}
+                  className={`w-full rounded-xl p-4 text-left transition-all duration-300 border group ${
+                    isSubmitting
+                      ? "bg-gray-50 opacity-50 cursor-not-allowed border-transparent"
+                      : "bg-gray-50 hover:bg-gradient-to-r hover:from-[#FF4081]/10 hover:to-[#E91E63]/10 hover:shadow-lg border-transparent hover:border-[#FF4081]/30"
+                  }`}
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-[#FF4081] to-[#E91E63] rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                      <i className={`${option.icon} text-white text-lg`}></i>
+                    <div
+                      className={`w-12 h-12 bg-gradient-to-r from-[#FF4081] to-[#E91E63] rounded-full flex items-center justify-center flex-shrink-0 transition-transform ${
+                        isSubmitting ? "" : "group-hover:scale-110"
+                      }`}
+                    >
+                      <i
+                        className={`${getOptionIcon(index)} text-white text-lg`}
+                      ></i>
                     </div>
                     <div>
-                      <div className="text-[#212121] font-semibold mb-1">{option.text}</div>
-                      <div className="text-sm text-[#FF4081] font-medium">{option.insight}</div>
+                      <div className="text-[#212121] font-semibold mb-1">
+                        {answer}
+                      </div>
                     </div>
                   </div>
                 </button>
@@ -143,16 +135,12 @@ const Quiz13to15 = () => {
 
         {/* Navigation Dots */}
         <div className="flex justify-center gap-2">
-          {questions.map((_, index) => (
+          {[...Array(totalQuestions)].map((_, index) => (
             <div
               key={index}
               className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index <= currentQuestion 
-                  ? 'bg-[#FF4081]' 
-                  : 'bg-gray-300'
-              } ${
-                index === currentQuestion ? 'scale-125' : ''
-              }`}
+                index <= currentQuestion ? "bg-[#FF4081]" : "bg-gray-300"
+              } ${index === currentQuestion ? "scale-125" : ""}`}
             ></div>
           ))}
         </div>

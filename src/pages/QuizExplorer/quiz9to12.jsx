@@ -1,153 +1,56 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-const Quiz9to12 = () => {
-  const navigate = useNavigate();
+const Quiz9to12 = ({ quiz, onAnswer, onSubmit, answers, isSubmitting }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState([]);
 
-  const questions = [
-    {
-      id: 1,
-      question: "What type of project excites you most? 🚀",
-      options: [
-        {
-          text: "Building something with code",
-          icon: "fa-solid fa-code",
-          color: "from-blue-500 to-blue-600",
-        },
-        {
-          text: "Creating digital art",
-          icon: "fa-solid fa-palette",
-          color: "from-pink-500 to-pink-600",
-        },
-        {
-          text: "Solving math puzzles",
-          icon: "fa-solid fa-calculator",
-          color: "from-green-500 to-green-600",
-        },
-        {
-          text: "Writing stories",
-          icon: "fa-solid fa-pen-fancy",
-          color: "from-purple-500 to-purple-600",
-        },
-      ],
-    },
-    {
-      id: 2,
-      question: "In group projects, you usually... 🤝",
-      options: [
-        {
-          text: "Lead and organize everyone",
-          icon: "fa-solid fa-crown",
-          color: "from-yellow-500 to-orange-500",
-        },
-        {
-          text: "Come up with creative ideas",
-          icon: "fa-solid fa-lightbulb",
-          color: "from-blue-500 to-cyan-500",
-        },
-        {
-          text: "Focus on making it perfect",
-          icon: "fa-solid fa-star",
-          color: "from-green-500 to-teal-500",
-        },
-        {
-          text: "Support and encourage others",
-          icon: "fa-solid fa-heart",
-          color: "from-pink-500 to-red-500",
-        },
-      ],
-    },
-    {
-      id: 3,
-      question: "Your ideal weekend activity? 🎯",
-      options: [
-        {
-          text: "Learn a new skill online",
-          icon: "fa-solid fa-graduation-cap",
-          color: "from-indigo-500 to-indigo-600",
-        },
-        {
-          text: "Compete in a game tournament",
-          icon: "fa-solid fa-gamepad",
-          color: "from-red-500 to-red-600",
-        },
-        {
-          text: "Explore nature and take photos",
-          icon: "fa-solid fa-camera",
-          color: "from-green-500 to-green-600",
-        },
-        {
-          text: "Build or fix something",
-          icon: "fa-solid fa-tools",
-          color: "from-gray-500 to-gray-600",
-        },
-      ],
-    },
-    {
-      id: 4,
-      question: "What motivates you most? ⚡",
-      options: [
-        {
-          text: "Solving complex challenges",
-          icon: "fa-solid fa-puzzle-piece",
-          color: "from-purple-500 to-purple-600",
-        },
-        {
-          text: "Helping others succeed",
-          icon: "fa-solid fa-hands-helping",
-          color: "from-blue-500 to-blue-600",
-        },
-        {
-          text: "Creating something unique",
-          icon: "fa-solid fa-magic-wand-sparkles",
-          color: "from-pink-500 to-pink-600",
-        },
-        {
-          text: "Becoming really good at something",
-          icon: "fa-solid fa-trophy",
-          color: "from-yellow-500 to-yellow-600",
-        },
-      ],
-    },
-    {
-      id: 5,
-      question: "In the future, you'd like to... 🌟",
-      options: [
-        {
-          text: "Invent new technology",
-          icon: "fa-solid fa-robot",
-          color: "from-cyan-500 to-cyan-600",
-        },
-        {
-          text: "Start your own business",
-          icon: "fa-solid fa-rocket",
-          color: "from-orange-500 to-orange-600",
-        },
-        {
-          text: "Make the world more beautiful",
-          icon: "fa-solid fa-palette",
-          color: "from-pink-500 to-pink-600",
-        },
-        {
-          text: "Discover new things",
-          icon: "fa-solid fa-microscope",
-          color: "from-green-500 to-green-600",
-        },
-      ],
-    },
-  ];
+  const questions = quiz.questions;
 
-  const handleAnswer = (answer) => {
-    const newAnswers = [...answers, answer];
-    setAnswers(newAnswers);
+  if (!quiz || questions.length === 0) {
+    return <div>Loading quiz...</div>;
+  }
 
-    if (currentQuestion < questions.length - 1) {
+  const currentQuestionData = questions[currentQuestion];
+  const totalQuestions = questions.length;
+
+  console.log(currentQuestionData, "checking");
+
+  const handleAnswerClick = (answer) => {
+    if (isSubmitting) return;
+
+    onAnswer(currentQuestion, answer);
+
+    // Move to next question
+    if (currentQuestion < totalQuestions - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      navigate("/results");
+      // Quiz completed
+      onSubmit();
     }
+  };
+
+  // Colorful gradient options
+  const getOptionColor = (index) => {
+    const colors = [
+      "from-blue-500 to-blue-600",
+      "from-pink-500 to-pink-600",
+      "from-green-500 to-green-600",
+      "from-purple-500 to-purple-600",
+      "from-yellow-500 to-orange-500",
+      "from-cyan-500 to-cyan-600",
+    ];
+    return colors[index % colors.length];
+  };
+
+  const getOptionIcon = (index) => {
+    const icons = [
+      "fa-solid fa-star",
+      "fa-solid fa-heart",
+      "fa-solid fa-lightbulb",
+      "fa-solid fa-rocket",
+      "fa-solid fa-crown",
+      "fa-solid fa-magic-wand-sparkles",
+    ];
+    return icons[index % icons.length];
   };
 
   return (
@@ -173,7 +76,7 @@ const Quiz9to12 = () => {
             <div className="w-16 h-1 bg-gradient-to-r from-[#1A73E8] to-[#4CAF50] rounded-full"></div>
             <div className="text-center">
               <div className="text-2xl font-bold text-[#4CAF50]">
-                {questions.length}
+                {totalQuestions}
               </div>
               <div className="text-sm text-gray-500">Total</div>
             </div>
@@ -186,7 +89,7 @@ const Quiz9to12 = () => {
             <div
               className="bg-gradient-to-r from-[#1A73E8] to-[#4CAF50] h-2 rounded-full transition-all duration-700 ease-out"
               style={{
-                width: `${((currentQuestion + 1) / questions.length) * 100}%`,
+                width: `${((currentQuestion + 1) / totalQuestions) * 100}%`,
               }}
             ></div>
           </div>
@@ -199,28 +102,37 @@ const Quiz9to12 = () => {
               <i className="fa-solid fa-lightbulb text-white text-3xl"></i>
             </div>
             <h2 className="text-2xl md:text-3xl font-bold text-[#212121] mb-4">
-              {questions[currentQuestion].question}
+              {currentQuestionData.text || currentQuestionData.question}
             </h2>
             <p className="text-gray-600">
-              Choose what resonates with you most!
+              {isSubmitting
+                ? "Processing your answer..."
+                : "Choose what resonates with you most!"}
             </p>
           </div>
 
           {/* Interactive Options */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {questions[currentQuestion].options.map((option, index) => (
+            {currentQuestionData.answers.map((answer, index) => (
               <button
                 key={index}
-                onClick={() => handleAnswer(option.text)}
-                className={`bg-gradient-to-r ${option.color} text-white rounded-2xl p-6 hover:scale-105 hover:rotate-1 transform transition-all duration-300 shadow-lg hover:shadow-2xl group relative overflow-hidden`}
+                onClick={() => handleAnswerClick(answer)}
+                disabled={isSubmitting}
+                className={`bg-gradient-to-r ${getOptionColor(
+                  index
+                )} text-white rounded-2xl p-6 transform transition-all duration-300 shadow-lg group relative overflow-hidden ${
+                  isSubmitting
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:scale-105 hover:rotate-1 hover:shadow-2xl"
+                }`}
               >
                 <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div className="relative flex items-center gap-4">
                   <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
-                    <i className={`${option.icon} text-2xl`}></i>
+                    <i className={`${getOptionIcon(index)} text-2xl`}></i>
                   </div>
                   <span className="text-lg font-semibold text-left">
-                    {option.text}
+                    {answer}
                   </span>
                 </div>
               </button>
@@ -230,7 +142,7 @@ const Quiz9to12 = () => {
 
         {/* Progress Dots */}
         <div className="flex justify-center gap-3">
-          {questions.map((_, index) => (
+          {[...Array(totalQuestions)].map((_, index) => (
             <div
               key={index}
               className={`transition-all duration-500 rounded-full ${

@@ -1,177 +1,30 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-const Quiz16to18 = () => {
-  const navigate = useNavigate();
+const Quiz16to18 = ({ quiz, onAnswer, onSubmit, answers, isSubmitting }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState([]);
 
-  const questions = [
-    {
-      id: 1,
-      question: "What drives your decision-making process?",
-      context: "Career Assessment",
-      options: [
-        {
-          text: "Data-driven analysis and logical reasoning",
-          value: "analytical",
-          description:
-            "I prefer to make decisions based on thorough research and objective evidence.",
-        },
-        {
-          text: "Intuition and personal values alignment",
-          value: "intuitive",
-          description:
-            "I trust my instincts and ensure decisions align with my core beliefs.",
-        },
-        {
-          text: "Potential for innovation and creativity",
-          value: "creative",
-          description:
-            "I'm drawn to opportunities that allow for original thinking and novel solutions.",
-        },
-        {
-          text: "Social impact and collaborative outcomes",
-          value: "social",
-          description:
-            "I prioritize decisions that benefit others and involve working with people.",
-        },
-      ],
-    },
-    {
-      id: 2,
-      question: "How do you approach long-term goal setting?",
-      context: "Strategic Planning",
-      options: [
-        {
-          text: "Create detailed roadmaps with measurable milestones",
-          value: "structured",
-          description:
-            "I develop comprehensive plans with clear metrics and timelines.",
-        },
-        {
-          text: "Set ambitious visions and adapt flexibly",
-          value: "adaptive",
-          description:
-            "I aim high and adjust my approach based on changing circumstances.",
-        },
-        {
-          text: "Focus on continuous learning and skill development",
-          value: "learning",
-          description:
-            "I prioritize growth opportunities and knowledge acquisition.",
-        },
-        {
-          text: "Balance multiple priorities and stakeholder needs",
-          value: "balanced",
-          description:
-            "I consider various perspectives and maintain equilibrium across goals.",
-        },
-      ],
-    },
-    {
-      id: 3,
-      question: "What type of challenges energize you most?",
-      context: "Work Preferences",
-      options: [
-        {
-          text: "Complex technical problems requiring expertise",
-          value: "technical",
-          description:
-            "I thrive on solving intricate problems that demand deep knowledge.",
-        },
-        {
-          text: "Interpersonal situations requiring emotional intelligence",
-          value: "interpersonal",
-          description:
-            "I excel in managing relationships and understanding human dynamics.",
-        },
-        {
-          text: "Strategic decisions with significant impact",
-          value: "strategic",
-          description:
-            "I'm energized by high-stakes decisions that shape outcomes.",
-        },
-        {
-          text: "Creative projects with open-ended possibilities",
-          value: "creative",
-          description:
-            "I love exploring uncharted territory and generating original ideas.",
-        },
-      ],
-    },
-    {
-      id: 4,
-      question: "How do you define professional success?",
-      context: "Values Assessment",
-      options: [
-        {
-          text: "Expertise recognition and thought leadership",
-          value: "expertise",
-          description:
-            "Being acknowledged as an authority in my field of specialization.",
-        },
-        {
-          text: "Positive impact on community and society",
-          value: "impact",
-          description:
-            "Contributing meaningfully to causes larger than myself.",
-        },
-        {
-          text: "Innovation and breakthrough achievements",
-          value: "innovation",
-          description:
-            "Creating something new that advances knowledge or capabilities.",
-        },
-        {
-          text: "Building and leading successful teams",
-          value: "leadership",
-          description:
-            "Developing others and achieving collective goals through collaboration.",
-        },
-      ],
-    },
-    {
-      id: 5,
-      question: "What learning style accelerates your growth?",
-      context: "Development Preferences",
-      options: [
-        {
-          text: "Independent research and self-directed study",
-          value: "independent",
-          description:
-            "I learn best through autonomous exploration and individual investigation.",
-        },
-        {
-          text: "Mentorship and expert guidance",
-          value: "guided",
-          description:
-            "I benefit from experienced professionals sharing knowledge and insights.",
-        },
-        {
-          text: "Hands-on experience and practical application",
-          value: "experiential",
-          description:
-            "I learn most effectively by doing and applying concepts in real situations.",
-        },
-        {
-          text: "Collaborative learning and peer interaction",
-          value: "collaborative",
-          description:
-            "I thrive in environments where I can learn with and from others.",
-        },
-      ],
-    },
-  ];
+  const questions = quiz.questions;
 
-  const handleAnswer = (answer) => {
-    const newAnswers = [...answers, answer];
-    setAnswers(newAnswers);
+  if (!quiz || questions.length === 0) {
+    return <div>Loading quiz...</div>;
+  }
 
-    if (currentQuestion < questions.length - 1) {
+  const currentQuestionData = questions[currentQuestion];
+  const totalQuestions = questions.length;
+
+  console.log(currentQuestionData, "checking");
+
+  const handleAnswerClick = (answer) => {
+    if (isSubmitting) return;
+
+    onAnswer(currentQuestion, answer);
+
+    // Move to next question
+    if (currentQuestion < totalQuestions - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      navigate("/results");
+      // Quiz completed
+      onSubmit();
     }
   };
 
@@ -200,7 +53,7 @@ const Quiz16to18 = () => {
               Assessment Progress
             </div>
             <div className="text-sm font-bold text-[#4CAF50]">
-              {Math.round(((currentQuestion + 1) / questions.length) * 100)}%
+              {Math.round(((currentQuestion + 1) / totalQuestions) * 100)}%
               Complete
             </div>
           </div>
@@ -208,7 +61,7 @@ const Quiz16to18 = () => {
             <div
               className="bg-gradient-to-r from-[#4CAF50] to-[#2E7D32] h-3 rounded-full transition-all duration-700"
               style={{
-                width: `${((currentQuestion + 1) / questions.length) * 100}%`,
+                width: `${((currentQuestion + 1) / totalQuestions) * 100}%`,
               }}
             ></div>
           </div>
@@ -225,38 +78,57 @@ const Quiz16to18 = () => {
                 </span>
               </div>
               <div>
-                <div className="text-sm font-medium text-[#4CAF50] mb-1">
-                  {questions[currentQuestion].context}
-                </div>
+                {currentQuestionData.context && (
+                  <div className="text-sm font-medium text-[#4CAF50] mb-1">
+                    {currentQuestionData.context}
+                  </div>
+                )}
                 <h2 className="text-xl font-bold text-[#212121]">
-                  {questions[currentQuestion].question}
+                  {currentQuestionData.text || currentQuestionData.question}
                 </h2>
               </div>
             </div>
+            {isSubmitting && (
+              <p className="text-gray-600 text-sm text-center mt-4">
+                Processing your response...
+              </p>
+            )}
           </div>
 
           {/* Options */}
           <div className="p-8">
             <div className="space-y-4">
-              {questions[currentQuestion].options.map((option, index) => (
+              {currentQuestionData.answers.map((answer, index) => (
                 <button
                   key={index}
-                  onClick={() => handleAnswer(option.text)}
-                  className="w-full text-left p-6 rounded-xl border-2 border-gray-100 hover:border-[#4CAF50]/50 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 transition-all duration-300 group"
+                  onClick={() => handleAnswerClick(answer)}
+                  disabled={isSubmitting}
+                  className={`w-full text-left p-6 rounded-xl border-2 transition-all duration-300 group ${
+                    isSubmitting
+                      ? "border-gray-100 bg-gray-50 opacity-50 cursor-not-allowed"
+                      : "border-gray-100 hover:border-[#4CAF50]/50 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50"
+                  }`}
                 >
                   <div className="flex items-start gap-4">
-                    <div className="w-8 h-8 bg-gradient-to-r from-[#4CAF50] to-[#2E7D32] rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                    <div
+                      className={`w-8 h-8 bg-gradient-to-r from-[#4CAF50] to-[#2E7D32] rounded-full flex items-center justify-center flex-shrink-0 transition-transform ${
+                        isSubmitting ? "" : "group-hover:scale-110"
+                      }`}
+                    >
                       <span className="text-white font-bold text-sm">
                         {String.fromCharCode(65 + index)}
                       </span>
                     </div>
                     <div>
                       <div className="text-[#212121] font-semibold text-lg mb-2">
-                        {option.text}
+                        {answer}
                       </div>
-                      <div className="text-gray-600 text-sm leading-relaxed">
-                        {option.description}
-                      </div>
+                      {currentQuestionData.descriptions &&
+                        currentQuestionData.descriptions[index] && (
+                          <div className="text-gray-600 text-sm leading-relaxed">
+                            {currentQuestionData.descriptions[index]}
+                          </div>
+                        )}
                     </div>
                   </div>
                 </button>
@@ -267,7 +139,7 @@ const Quiz16to18 = () => {
 
         {/* Question Navigator */}
         <div className="flex justify-center mt-8 gap-3">
-          {questions.map((_, index) => (
+          {[...Array(totalQuestions)].map((_, index) => (
             <div
               key={index}
               className={`w-4 h-4 rounded-full transition-all duration-500 ${
