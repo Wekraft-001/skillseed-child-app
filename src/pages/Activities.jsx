@@ -363,10 +363,11 @@ const Activities = () => {
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
                   <Button
-                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg"
+                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg disabled:cursor-not-allowed"
                     onClick={() => handleStartActivity(activity)}
+                    disabled={activity.isCompleted}
                   >
-                    Start Activity
+                    {activity.isCompleted ? "Completed ✓" : "Start Activity"}
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">

@@ -994,11 +994,52 @@ const CommunityDetail = () => {
                           </p>
                         </div>
                       ) : (
-                        <div className="space-y-4">
-                          <p className="text-gray-500 text-center py-4">
-                            Member list coming soon! We're working on this
-                            feature.
-                          </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {community.members && community.members.length > 0 ? (
+                            community.members.map((member, index) => (
+                              <div
+                                key={member._id || member.id}
+                                className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow"
+                              >
+                                <div className="flex items-center gap-4">
+                                  <img
+                                    src={member.image || getRandomAvatar(index)}
+                                    alt={`${member.firstName} ${member.lastName}`}
+                                    className={`w-16 h-16 rounded-full border-2 object-cover ${
+                                      categoryDetails.buttonColor.includes(
+                                        "4CAF50"
+                                      )
+                                        ? "border-[#4CAF50]"
+                                        : categoryDetails.buttonColor.includes(
+                                            "FF4081"
+                                          )
+                                        ? "border-[#FF4081]"
+                                        : "border-[#1A73E8]"
+                                    }`}
+                                  />
+                                  <div className="flex-1">
+                                    <h3 className="font-bold text-[#212121]">
+                                      {member.firstName} {member.lastName}
+                                    </h3>
+                                    <p className="text-sm text-gray-500">
+                                      Community Member
+                                    </p>
+                                    {member._id === currentUserId && (
+                                      <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">
+                                        You
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            ))
+                          ) : (
+                            <div className="col-span-2 text-center py-8">
+                              <p className="text-gray-500">
+                                No members to display
+                              </p>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>

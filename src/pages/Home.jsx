@@ -6,15 +6,10 @@ import {
   Crown,
   Plus,
   CloudUpload,
-  Rocket,
-  FlaskConical,
-  Palette,
   BookOpen,
   Video,
   Gamepad,
-  PenLine,
   Book,
-  Vibrate,
   VideoIcon,
   Compass,
   Lightbulb,
@@ -142,7 +137,7 @@ const Home = () => {
               <div className="relative inline-block">
                 <div className="w-28 h-28 rounded-full mx-auto relative">
                   {/* Animated Ring */}
-                  {/* <div className="absolute inset-0 bg-gradient-to-br from-[#FFC107]/40 via-[#FF4081]/40 to-[#4CAF50]/40 rounded-full animate-pulse"></div> */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#FFC107]/40 via-[#FF4081]/40 to-[#4CAF50]/40 rounded-full animate-pulse"></div>
                   {/* Floating Bubbles */}
                   <div className="absolute -top-4 -right-2 w-6 h-6 bg-[#1A73E8]/30 rounded-full animate-bounce"></div>
                   <div
@@ -202,10 +197,6 @@ const Home = () => {
                   </div>
                   <div className="text-xs text-gray-500">Badges</div>
                 </div>
-                {/* <div className="bg-[#FF4081]/5 rounded-xl text-center flex flex-col items-center justify-center px-3">
-                  <div className="text-2xl font-bold text-[#FF4081]">89</div>
-                  <div className="text-xs text-gray-500">Adventures</div>
-                </div> */}
                 <div className="bg-[#FFC107]/5 rounded-xl flex flex-col items-center justify-center px-3 py-1">
                   <div className="text-2xl font-bold text-[#FFC107]">
                     {rewards?.totalStars}
@@ -274,44 +265,30 @@ const Home = () => {
             </div>
 
             {/* Badges Showcase */}
-            {/* <div
+            <div
               id="badges-showcase"
               className="bg-white rounded-2xl p-6 shadow-sm"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-[#212121]">Recent Badges</h3>
-                <button className="text-sm text-[#1A73E8] hover:underline">
+                {/* <button className="text-sm text-[#1A73E8] hover:underline">
                   View All
-                </button>
+                </button> */}
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
-                <div className="badge-item group relative cursor-pointer">
-                  <div className="w-14 h-14 rounded-full bg-[#FFC107]/10 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
-                    <Rocket size={24} className="text-[#FFC107]" />
+              {rewards?.badges.map((badge, index) => (
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="badge-item group relative cursor-pointer">
+                    <div className="w-14 h-14 rounded-full bg-[#FFC107]/10 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform text-2xl">
+                      {badge?.icon}
+                    </div>
+                    <p className="text-xs text-center mt-2 text-gray-600">
+                      {badge?.name}
+                    </p>
                   </div>
-                  <p className="text-xs text-center mt-2 text-gray-600">
-                    Space Explorer
-                  </p>
                 </div>
-                <div className="badge-item group relative cursor-pointer">
-                  <div className="w-14 h-14 rounded-full bg-[#4CAF50]/10 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
-                    <FlaskConical size={24} className="text-[#4CAF50]" />
-                  </div>
-                  <p className="text-xs text-center mt-2 text-gray-600">
-                    Science Whiz
-                  </p>
-                </div>
-                <div className="badge-item group relative cursor-pointer">
-                  <div className="w-14 h-14 rounded-full bg-[#FF4081]/10 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
-                    <Palette size={24} className="text-[#FF4081]" />
-                  </div>
-                  <p className="text-xs text-center mt-2 text-gray-600">
-                    Art Master
-                  </p>
-                </div>
-              </div>
-            </div> */}
+              ))}
+            </div>
           </div>
 
           {/* Main Content Area */}
@@ -401,9 +378,10 @@ const Home = () => {
 
             {/* Learning Feed */}
             <div id="learning-feed" className="space-y-6">
+              {/* Recommendation Header */}
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold text-[#212121]">
-                  Recommended for You
+                  Recommended For You
                 </h2>
                 <div className="flex gap-2">
                   <button className="px-4 py-2 rounded-full bg-white text-sm font-medium text-[#1A73E8] hover:bg-[#1A73E8] hover:text-white transition-colors">
@@ -415,100 +393,112 @@ const Home = () => {
                     Books
                   </button>
                   <button className="px-4 py-2 rounded-full bg-white text-sm font-medium text-[#FF4081] hover:bg-[#FF4081] hover:text-white transition-colors">
-                    <PenLine size={16} className="inline mr-2" />
-                    Projects
+                    <Gamepad size={16} className="inline mr-2" />
+                    Games
                   </button>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {/* Video Card */}
-                <div className="bg-white rounded-2xl shadow-sm overflow-hidden group cursor-pointer">
-                  <div className="relative">
-                    <img
-                      className="w-full h-48 object-cover"
-                      src="https://storage.googleapis.com/uxpilot-auth.appspot.com/b3b163a882-8c9cd26389bac7647515.png"
-                      alt="educational video thumbnail showing space exploration for kids with colorful planets and astronauts, cartoon style"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div className="absolute bottom-4 right-4 bg-[#1A73E8] rounded-full w-10 h-10 flex items-center justify-center transform translate-y-12 group-hover:translate-y-0 transition-transform">
-                      <div className="text-white">▶️</div>
+              {dashboardData?.educationalContents.map((content, index) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {/* Videos section */}
+                  {content?.videoUrl.map((video, index) => (
+                    <div className="bg-white rounded-2xl shadow-sm overflow-hidden group cursor-pointer">
+                      <div className="relative">
+                        <img
+                          className="w-full h-48 object-cover"
+                          src="https://storage.googleapis.com/uxpilot-auth.appspot.com/b3b163a882-8c9cd26389bac7647515.png"
+                          alt="educational video thumbnail showing space exploration for kids with colorful planets and astronauts, cartoon style"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div className="absolute bottom-4 right-4 bg-[#1A73E8] rounded-full w-10 h-10 flex items-center justify-center transform translate-y-12 group-hover:translate-y-0 transition-transform">
+                          <div className="text-white">▶️</div>
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-xs font-medium text-white bg-[#1A73E8] px-2 py-1 rounded-full">
+                            Science
+                          </span>
+                          <span className="text-xs text-gray-500">15 mins</span>
+                        </div>
+                        <h3 className="font-medium text-[#212121] mb-1">
+                          {video?.title}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          Learn about planets, stars, and space exploration!
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs font-medium text-white bg-[#1A73E8] px-2 py-1 rounded-full">
-                        Science
-                      </span>
-                      <span className="text-xs text-gray-500">15 mins</span>
-                    </div>
-                    <h3 className="font-medium text-[#212121] mb-1">
-                      Space Adventure: Journey to the Stars
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      Learn about planets, stars, and space exploration!
-                    </p>
-                  </div>
-                </div>
+                  ))}
 
-                {/* Game Card */}
-                <div className="bg-white rounded-2xl shadow-sm overflow-hidden group cursor-pointer">
-                  <div className="relative">
-                    <img
-                      className="w-full h-48 object-cover"
-                      src="https://storage.googleapis.com/uxpilot-auth.appspot.com/4afcdfe405-2c6bf681b5e3e4f3a72c.png"
-                      alt="educational math game interface for kids with cute characters and numbers, cartoon style"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div className="absolute bottom-4 right-4 bg-[#4CAF50] rounded-full w-10 h-10 flex items-center justify-center transform translate-y-12 group-hover:translate-y-0 transition-transform">
-                      <Gamepad size={20} className="text-white" />
+                  {/* Books Section Card */}
+                  {content?.books.map((book, index) => (
+                    <div className="bg-white rounded-2xl shadow-sm overflow-hidden group cursor-pointer ">
+                      <div className="relative">
+                        <img
+                          className="w-full h-48 object-cover"
+                          src="https://storage.googleapis.com/uxpilot-auth.appspot.com/de43d241d9-f6224617d46087a56283.png"
+                          alt="kids art and craft project materials with colorful papers, scissors, and glue, flat lay style"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div className="absolute bottom-4 right-4 bg-[#FF4081] rounded-full w-10 h-10 flex items-center justify-center transform translate-y-12 group-hover:translate-y-0 transition-transform">
+                          <Book size={20} className="text-white" />
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-xs font-medium text-white bg-[#FF4081] px-2 py-1 rounded-full">
+                            {book.theme}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {book.author}
+                          </span>
+                        </div>
+                        <h3 className="font-medium text-[#212121] mb-1">
+                          {book.title}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          Make amazing art with simple materials!
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs font-medium text-white bg-[#4CAF50] px-2 py-1 rounded-full">
-                        Math
-                      </span>
-                      <span className="text-xs text-gray-500">Interactive</span>
-                    </div>
-                    <h3 className="font-medium text-[#212121] mb-1">
-                      Number Ninja: Math Challenge
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      Practice math skills with fun mini-games!
-                    </p>
-                  </div>
-                </div>
+                  ))}
 
-                {/* Project Card */}
-                <div className="bg-white rounded-2xl shadow-sm overflow-hidden group cursor-pointer">
-                  <div className="relative">
-                    <img
-                      className="w-full h-48 object-cover"
-                      src="https://storage.googleapis.com/uxpilot-auth.appspot.com/de43d241d9-f6224617d46087a56283.png"
-                      alt="kids art and craft project materials with colorful papers, scissors, and glue, flat lay style"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div className="absolute bottom-4 right-4 bg-[#FF4081] rounded-full w-10 h-10 flex items-center justify-center transform translate-y-12 group-hover:translate-y-0 transition-transform">
-                      <PenLine size={20} className="text-white" />
+                  {/* Games section */}
+                  {content?.games.map((game, index) => (
+                    <div className="bg-white rounded-2xl shadow-sm overflow-hidden group cursor-pointer">
+                      <div className="relative">
+                        <img
+                          className="w-full h-48 object-cover"
+                          src="https://storage.googleapis.com/uxpilot-auth.appspot.com/4afcdfe405-2c6bf681b5e3e4f3a72c.png"
+                          alt="educational math game interface for kids with cute characters and numbers, cartoon style"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div className="absolute bottom-4 right-4 bg-[#4CAF50] rounded-full w-10 h-10 flex items-center justify-center transform translate-y-12 group-hover:translate-y-0 transition-transform">
+                          <Gamepad size={20} className="text-white" />
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-xs font-medium text-white bg-[#4CAF50] px-2 py-1 rounded-full">
+                            Math
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {game?.skill}
+                          </span>
+                        </div>
+                        <h3 className="font-medium text-[#212121] mb-1">
+                          {game?.name}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          Practice math skills with fun mini-games!
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs font-medium text-white bg-[#FF4081] px-2 py-1 rounded-full">
-                        Art
-                      </span>
-                      <span className="text-xs text-gray-500">DIY Project</span>
-                    </div>
-                    <h3 className="font-medium text-[#212121] mb-1">
-                      Creative Paper Crafts
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      Make amazing art with simple materials!
-                    </p>
-                  </div>
+                  ))}
                 </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
