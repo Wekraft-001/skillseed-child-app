@@ -98,7 +98,7 @@ const Sidebar = () => {
     },
     {
       icon: <GrResources className="w-5 h-5 mr-2" />,
-      label: "Resorces",
+      label: "Resources",
       path: "/resources",
     },
     {

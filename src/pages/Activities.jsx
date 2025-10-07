@@ -304,169 +304,191 @@ const Activities = () => {
           Discover exciting projects and learn something new!
         </p>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredActivities.map((activity) => (
-          <Card
-            key={activity._id}
-            className="group overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 bg-white rounded-2xl"
+      {filteredActivities.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 px-4">
+          <div className="w-32 h-32 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mb-6">
+            <span className="text-6xl">🎨</span>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-3">
+            No Activities Available Yet
+          </h2>
+          <p className="text-gray-600 text-center max-w-md mb-6">
+            We're working on adding exciting new activities for your age group.
+            Check back soon for fun learning projects!
+          </p>
+          <Button
+            onClick={() => refetch()}
+            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
           >
-            <div className="relative h-48 overflow-hidden">
-              <img
-                src={activity?.imageUrl}
-                alt={activity.title}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                // onError={(e) => {
-                //   e.target.src = `https://via.placeholder.com/400x300/4F46E5/ffffff?text=${encodeURIComponent(
-                //     activity.title
-                //   )}`;
-                // }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-              <div className="absolute top-4 right-4">
-                <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-gray-700">
-                  {activity.theme}
-                </span>
-              </div>
-            </div>
-
-            <CardHeader className="pb-3">
-              <div className="flex justify-between items-start mb-2">
-                <CardTitle className="text-xl font-bold text-gray-900 line-clamp-2">
-                  {activity.title}
-                </CardTitle>
-              </div>
-            </CardHeader>
-
-            <CardContent className="pb-4">
-              <CardDescription className="text-gray-600 line-clamp-3 mb-4">
-                {activity.description}
-              </CardDescription>
-
-              <div className="flex items-center justify-between text-sm text-gray-500">
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center">
-                    <Clock className="w-4 h-4 mr-1" />
-                    <span>{activity.estimatedTime} min</span>
-                  </div>
-                  <span className="text-xs bg-gray-100 px-2 py-1 rounded">
-                    Age {activity.ageRange}
+            Refresh Activities
+          </Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredActivities.map((activity) => (
+            <Card
+              key={activity._id}
+              className="group overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 bg-white rounded-2xl"
+            >
+              <div className="relative h-48 overflow-hidden">
+                <img
+                  src={activity?.imageUrl}
+                  alt={activity.title}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  // onError={(e) => {
+                  //   e.target.src = `https://via.placeholder.com/400x300/4F46E5/ffffff?text=${encodeURIComponent(
+                  //     activity.title
+                  //   )}`;
+                  // }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                <div className="absolute top-4 right-4">
+                  <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-gray-700">
+                    {activity.theme}
                   </span>
                 </div>
-                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-medium">
-                  {activity.difficultyLevel}
-                </span>
               </div>
-            </CardContent>
 
-            <CardFooter className="pt-0">
-              <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-                <DialogTrigger asChild>
-                  <Button
-                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg disabled:cursor-not-allowed"
-                    onClick={() => handleStartActivity(activity)}
-                    disabled={activity.isCompleted}
-                  >
-                    {activity.isCompleted ? "Completed ✓" : "Start Activity"}
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
-                  <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold">
-                      {selectedActivity?.title}
-                    </DialogTitle>
-                    <DialogDescription className="text-lg">
-                      {currentStep === "tutorial" &&
-                        "Watch the tutorial to get started"}
-                      {currentStep === "project" &&
-                        "Time to build your project!"}
-                      {currentStep === "completed" &&
-                        "Project completed successfully!"}
-                    </DialogDescription>
-                  </DialogHeader>
+              <CardHeader className="pb-3">
+                <div className="flex justify-between items-start mb-2">
+                  <CardTitle className="text-xl font-bold text-gray-900 line-clamp-2">
+                    {activity.title}
+                  </CardTitle>
+                </div>
+              </CardHeader>
 
-                  <div className="py-6">
-                    {selectedActivity && (
-                      <>
-                        {currentStep === "tutorial" && (
-                          <TutorialStep activity={selectedActivity} />
-                        )}
-                        {currentStep === "project" && (
-                          <ProjectStep activity={selectedActivity} />
-                        )}
-                        {currentStep === "completed" && (
-                          <CompletionStep activity={selectedActivity} />
-                        )}
-                      </>
-                    )}
+              <CardContent className="pb-4">
+                <CardDescription className="text-gray-600 line-clamp-3 mb-4">
+                  {activity.description}
+                </CardDescription>
+
+                <div className="flex items-center justify-between text-sm text-gray-500">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center">
+                      <Clock className="w-4 h-4 mr-1" />
+                      <span>{activity.estimatedTime} min</span>
+                    </div>
+                    <span className="text-xs bg-gray-100 px-2 py-1 rounded">
+                      Age {activity.ageRange}
+                    </span>
                   </div>
+                  <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-medium">
+                    {activity.difficultyLevel}
+                  </span>
+                </div>
+              </CardContent>
 
-                  <DialogFooter className="flex flex-col sm:flex-row gap-3">
-                    {currentStep === "tutorial" && (
-                      <>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={resetFlow}
-                          className="flex-1"
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          type="button"
-                          onClick={handleStartProject}
-                          className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                        >
-                          Start Project
-                        </Button>
-                      </>
-                    )}
-                    {currentStep === "project" && (
-                      <>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => setCurrentStep("tutorial")}
-                          className="flex-1"
-                        >
-                          Back to Tutorial
-                        </Button>
-                        <Button
-                          type="button"
-                          onClick={handleCompleteProject}
-                          disabled={isCompleting}
-                          className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:opacity-50"
-                        >
-                          {isCompleting ? "Completing..." : "Complete Project"}
-                        </Button>
-                      </>
-                    )}
-                    {currentStep === "completed" && (
-                      <>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={resetFlow}
-                          className="flex-1"
-                        >
-                          Close
-                        </Button>
-                        <Button
-                          type="button"
-                          onClick={handleTryAnotherActivity}
-                          className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                        >
-                          Try Another Activity
-                        </Button>
-                      </>
-                    )}
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
+              <CardFooter className="pt-0">
+                <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg disabled:cursor-not-allowed"
+                      onClick={() => handleStartActivity(activity)}
+                      disabled={activity.isCompleted}
+                    >
+                      {activity.isCompleted ? "Completed ✓" : "Start Activity"}
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle className="text-2xl font-bold">
+                        {selectedActivity?.title}
+                      </DialogTitle>
+                      <DialogDescription className="text-lg">
+                        {currentStep === "tutorial" &&
+                          "Watch the tutorial to get started"}
+                        {currentStep === "project" &&
+                          "Time to build your project!"}
+                        {currentStep === "completed" &&
+                          "Project completed successfully!"}
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="py-6">
+                      {selectedActivity && (
+                        <>
+                          {currentStep === "tutorial" && (
+                            <TutorialStep activity={selectedActivity} />
+                          )}
+                          {currentStep === "project" && (
+                            <ProjectStep activity={selectedActivity} />
+                          )}
+                          {currentStep === "completed" && (
+                            <CompletionStep activity={selectedActivity} />
+                          )}
+                        </>
+                      )}
+                    </div>
+
+                    <DialogFooter className="flex flex-col sm:flex-row gap-3">
+                      {currentStep === "tutorial" && (
+                        <>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={resetFlow}
+                            className="flex-1"
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            type="button"
+                            onClick={handleStartProject}
+                            className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                          >
+                            Start Project
+                          </Button>
+                        </>
+                      )}
+                      {currentStep === "project" && (
+                        <>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setCurrentStep("tutorial")}
+                            className="flex-1"
+                          >
+                            Back to Tutorial
+                          </Button>
+                          <Button
+                            type="button"
+                            onClick={handleCompleteProject}
+                            disabled={isCompleting}
+                            className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:opacity-50"
+                          >
+                            {isCompleting
+                              ? "Completing..."
+                              : "Complete Project"}
+                          </Button>
+                        </>
+                      )}
+                      {currentStep === "completed" && (
+                        <>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={resetFlow}
+                            className="flex-1"
+                          >
+                            Close
+                          </Button>
+                          <Button
+                            type="button"
+                            onClick={handleTryAnotherActivity}
+                            className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                          >
+                            Try Another Activity
+                          </Button>
+                        </>
+                      )}
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

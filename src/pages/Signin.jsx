@@ -53,7 +53,7 @@ const Signin = () => {
 
       // Check if user has completed any quizzes
       try {
-        const dashboardResponse = await axios.get(
+        const response = await axios.get(
           `${apiURL}/student/dashboard`,
           {
             headers: {
@@ -64,8 +64,9 @@ const Signin = () => {
         );
 
         // Check if quizzes array is empty - new user should go to quizHome
-        const quizzes = dashboardResponse.data.quizzes;
-        if (!quizzes || quizzes.length === 0) {
+        const quizStatus = response.data.dashboardResponse.quizStatus;
+        // console.log(quizStatus)
+        if (quizStatus.needsToTakeQuiz || !quizStatus.isCompleted) {
           navigate("/quizHome");
         } else {
           // User has completed quizzes -> go to home

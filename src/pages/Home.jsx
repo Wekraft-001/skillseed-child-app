@@ -20,6 +20,11 @@ import {
   Award,
 } from "lucide-react";
 import AIAssistant from "../components/AIAssistant";
+import {
+  getYouTubeVideoId,
+  getYouTubeEmbedUrl,
+  getYouTubeThumbnail,
+} from "../lib/youtubeHelpers";
 
 // Mock data for demonstration
 const mockDashboardData = {
@@ -190,10 +195,11 @@ const Home = () => {
   };
 
   const getFilteredContent = () => {
-    const allContent = dashboardData?.educationalContents?.[0] || {};
-    const videos = allContent.videoUrl || [];
-    const books = allContent.books || [];
-    const games = allContent.games || [];
+    const allContent = dashboardData?.educationalContents || [];
+
+    const videos = allContent.flatMap((content) => content.videoUrl || []);
+    const books = allContent.flatMap((content) => content.books || []);
+    const games = allContent.flatMap((content) => content.games || []);
 
     switch (activeFilter) {
       case "videos":
@@ -493,7 +499,7 @@ const Home = () => {
               </div>
 
               {/* Learning Feed */}
-              <div className="space-y-6">
+              <div className="space-y-6 max-h-[calc(100vh-4rem)] overflow-y-auto">
                 <div className="flex items-center justify-between flex-wrap gap-4">
                   <h2 className="text-xl font-semibold text-[#212121]">
                     Recommended For You
@@ -554,13 +560,18 @@ const Home = () => {
                       {filteredContent.videos.map((video, index) => (
                         <div
                           key={`video-${index}`}
-                          onClick={() => openVideoModal(video)}
+                          onClick={() =>
+                            openVideoModal({
+                              ...video,
+                              url: getYouTubeEmbedUrl(video.url),
+                            })
+                          }
                           className="bg-white rounded-2xl shadow-sm overflow-hidden group cursor-pointer hover:shadow-lg transition-all"
                         >
                           <div className="relative">
                             <img
                               className="w-full h-48 object-cover"
-                              src={video.thumbnail}
+                              src={getYouTubeThumbnail(video.url)}
                               alt={video.title}
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
