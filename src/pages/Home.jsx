@@ -551,7 +551,7 @@ const Home = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-3">
                   {!hasAnyContent ? (
                     <EmptyState />
                   ) : (
@@ -596,7 +596,7 @@ const Home = () => {
                               {video.title}
                             </h3>
                             <p className="text-sm text-gray-500">
-                              Learn about planets, stars, and space exploration!
+                              {video.description}
                             </p>
                           </div>
                         </div>
@@ -663,11 +663,11 @@ const Home = () => {
                           <div className="p-4">
                             <div className="flex items-center gap-2 mb-2">
                               <span className="text-xs font-medium text-white bg-[#4CAF50] px-2 py-1 rounded-full">
-                                Math
+                              {game.skill}
                               </span>
-                              <span className="text-xs text-gray-500">
+                              {/* <span className="text-xs text-gray-500">
                                 {game.skill}
-                              </span>
+                              </span> */}
                             </div>
                             <h3 className="font-medium text-[#212121] mb-1">
                               {game.name}
