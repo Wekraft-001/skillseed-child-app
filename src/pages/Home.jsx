@@ -197,7 +197,7 @@ const Home = () => {
   const getFilteredContent = () => {
     const allContent = dashboardData?.educationalContents || [];
 
-    const videos = allContent.flatMap((content) => content.videoUrl || []);
+    const videos = allContent.flatMap((content) => content.videos || []);
     const books = allContent.flatMap((content) => content.books || []);
     const games = allContent.flatMap((content) => content.games || []);
 
@@ -663,7 +663,7 @@ const Home = () => {
                           <div className="p-4">
                             <div className="flex items-center gap-2 mb-2">
                               <span className="text-xs font-medium text-white bg-[#4CAF50] px-2 py-1 rounded-full">
-                              {game.skill}
+                                {game.skill}
                               </span>
                               {/* <span className="text-xs text-gray-500">
                                 {game.skill}

@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import mascotImage from "../assets/skillseed-mascot.png";
 import { Input } from "../components/ui/formComponents/input";
-import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 
 const Signin = () => {
   const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
@@ -48,20 +47,18 @@ const Signin = () => {
       // console.log(response);
       const accessToken = response.data.access_token;
       const childAge = response.data.user.age;
+      const userId = response.data.user._id;
       localStorage.setItem("childToken", accessToken);
       localStorage.setItem("childAge", childAge);
 
       // Check if user has completed any quizzes
       try {
-        const response = await axios.get(
-          `${apiURL}/student/dashboard`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await axios.get(`${apiURL}/student/dashboard`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        });
 
         // Check if quizzes array is empty - new user should go to quizHome
         const quizStatus = response.data.dashboardResponse.quizStatus;

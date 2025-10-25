@@ -6,10 +6,10 @@ const Results = () => {
   const navigate = useNavigate();
 
   // Get data passed from Quiz component
-  const { analysis, answers, quizId, ageRange, user } = location.state || {};
+  const { analysis, quizId, ageRange, user } = location.state || {};
 
   // If no data, redirect back to quiz home
-  if (!analysis || !answers) {
+  if (!analysis) {
     return (
       <div className="min-h-screen bg-[#F5F7FA] flex items-center justify-center">
         <div className="text-center">
@@ -28,137 +28,165 @@ const Results = () => {
   }
 
   // Parse the analysis to extract key insights
-  const parseAnalysis = (analysisText) => {
-    const sections = analysisText
-      .split(/\d+\.\s/)
-      .filter((section) => section.trim());
+  // const parseAnalysis = (analysisText) => {
+  //   const sections = analysisText
+  //     .split(/\d+\.\s/)
+  //     .filter((section) => section.trim());
 
-    return {
-      overview:
-        sections[0] ||
-        "Based on your responses, here's what we discovered about you!",
-      careers:
-        sections[1] ||
-        "Various career paths align with your interests and strengths.",
-      skills:
-        sections[2] ||
-        "Focus on developing skills that match your natural talents.",
-      education:
-        sections[3] || "Consider educational paths that support your goals.",
-      nextSteps:
-        sections[4] ||
-        "Explore opportunities to learn more about your interests.",
-    };
-  };
+  //   return {
+  //     overview:
+  //       sections[0] ||
+  //       "Based on your responses, here's what we discovered about you!",
+  //     careers:
+  //       sections[1] ||
+  //       "Various career paths align with your interests and strengths.",
+  //     skills:
+  //       sections[2] ||
+  //       "Focus on developing skills that match your natural talents.",
+  //     education:
+  //       sections[3] || "Consider educational paths that support your goals.",
+  //     nextSteps:
+  //       sections[4] ||
+  //       "Explore opportunities to learn more about your interests.",
+  //   };
+  // };
 
-  const parsedAnalysis = parseAnalysis(analysis);
+  // const parsedAnalysis = parseAnalysis(analysis);
 
-  // Generate superpower profile based on analysis content
-  const generateSuperpowers = (analysisText, answersData) => {
-    const lowerAnalysis = analysisText.toLowerCase();
-    const superpowers = [];
+  // // Generate superpower profile based on analysis content
+  // const generateSuperpowers = (analysisText, answersData) => {
+  //   const lowerAnalysis = analysisText.toLowerCase();
+  //   const superpowers = [];
 
-    // Determine superpowers based on analysis content
-    if (
-      lowerAnalysis.includes("creative") ||
-      lowerAnalysis.includes("art") ||
-      lowerAnalysis.includes("design")
-    ) {
-      superpowers.push({
-        title: "Creative Genius",
-        description:
-          "You love making beautiful things and thinking outside the box!",
-        icon: "fa-solid fa-palette",
-        color: "text-[#FF4081]",
-        bgColor: "bg-[#FF4081]/20",
-      });
-    }
+  //   // Determine superpowers based on analysis content
+  //   if (
+  //     lowerAnalysis.includes("creative") ||
+  //     lowerAnalysis.includes("art") ||
+  //     lowerAnalysis.includes("design")
+  //   ) {
+  //     superpowers.push({
+  //       title: "Creative Genius",
+  //       description:
+  //         "You love making beautiful things and thinking outside the box!",
+  //       icon: "fa-solid fa-palette",
+  //       color: "text-[#FF4081]",
+  //       bgColor: "bg-[#FF4081]/20",
+  //     });
+  //   }
 
-    if (
-      lowerAnalysis.includes("help") ||
-      lowerAnalysis.includes("social") ||
-      lowerAnalysis.includes("team")
-    ) {
-      superpowers.push({
-        title: "Team Helper",
-        description:
-          "You're amazing at working with others and helping friends!",
-        icon: "fa-solid fa-users",
-        color: "text-[#4CAF50]",
-        bgColor: "bg-[#4CAF50]/20",
-      });
-    }
+  //   if (
+  //     lowerAnalysis.includes("help") ||
+  //     lowerAnalysis.includes("social") ||
+  //     lowerAnalysis.includes("team")
+  //   ) {
+  //     superpowers.push({
+  //       title: "Team Helper",
+  //       description:
+  //         "You're amazing at working with others and helping friends!",
+  //       icon: "fa-solid fa-users",
+  //       color: "text-[#4CAF50]",
+  //       bgColor: "bg-[#4CAF50]/20",
+  //     });
+  //   }
 
-    if (
-      lowerAnalysis.includes("problem") ||
-      lowerAnalysis.includes("puzzle") ||
-      lowerAnalysis.includes("analytic")
-    ) {
-      superpowers.push({
-        title: "Problem Solver",
-        description: "You never give up and always find clever solutions!",
-        icon: "fa-solid fa-lightbulb",
-        color: "text-[#1A73E8]",
-        bgColor: "bg-[#1A73E8]/20",
-      });
-    }
+  //   if (
+  //     lowerAnalysis.includes("problem") ||
+  //     lowerAnalysis.includes("puzzle") ||
+  //     lowerAnalysis.includes("analytic")
+  //   ) {
+  //     superpowers.push({
+  //       title: "Problem Solver",
+  //       description: "You never give up and always find clever solutions!",
+  //       icon: "fa-solid fa-lightbulb",
+  //       color: "text-[#1A73E8]",
+  //       bgColor: "bg-[#1A73E8]/20",
+  //     });
+  //   }
 
-    // Default superpowers if none detected
-    if (superpowers.length === 0) {
-      superpowers.push(
-        {
-          title: "Focused Achiever",
-          description:
-            "You excel at completing tasks with attention to detail!",
-          icon: "fa-solid fa-target",
-          color: "text-[#FF9800]",
-          bgColor: "bg-[#FF9800]/20",
-        },
-        {
-          title: "Reliable Worker",
-          description: "Others can count on you to get things done well!",
-          icon: "fa-solid fa-shield-heart",
-          color: "text-[#9C27B0]",
-          bgColor: "bg-[#9C27B0]/20",
-        },
-        {
-          title: "Detail Master",
-          description: "You notice the important details others might miss!",
-          icon: "fa-solid fa-search",
-          color: "text-[#00BCD4]",
-          bgColor: "bg-[#00BCD4]/20",
-        }
-      );
-    }
+  //   // Default superpowers if none detected
+  //   if (superpowers.length === 0) {
+  //     superpowers.push(
+  //       {
+  //         title: "Focused Achiever",
+  //         description:
+  //           "You excel at completing tasks with attention to detail!",
+  //         icon: "fa-solid fa-target",
+  //         color: "text-[#FF9800]",
+  //         bgColor: "bg-[#FF9800]/20",
+  //       },
+  //       {
+  //         title: "Reliable Worker",
+  //         description: "Others can count on you to get things done well!",
+  //         icon: "fa-solid fa-shield-heart",
+  //         color: "text-[#9C27B0]",
+  //         bgColor: "bg-[#9C27B0]/20",
+  //       },
+  //       {
+  //         title: "Detail Master",
+  //         description: "You notice the important details others might miss!",
+  //         icon: "fa-solid fa-search",
+  //         color: "text-[#00BCD4]",
+  //         bgColor: "bg-[#00BCD4]/20",
+  //       }
+  //     );
+  //   }
 
-    return superpowers.slice(0, 3); // Limit to 3 superpowers
-  };
+  //   return superpowers.slice(0, 3); // Limit to 3 superpowers
+  // };
 
-  const superpowers = generateSuperpowers(analysis, answers);
+  // const superpowers = generateSuperpowers(analysis, answers);
+
+  // Extract all data from analysus object dynamically
+  const aiAnalysis = analysis.aiAnalysis || {};
+  const topCareerAreas = analysis.topCareerAreas || [];
+
+  // Dynamic color schemes for visual variety
+  const colorSchemes = [
+    {
+      gradient: "from-blue-50 to-indigo-50",
+      icon: "text-[#1A73E8]",
+      iconBg: "fa-solid fa-user",
+    },
+    {
+      gradient: "from-green-50 to-emerald-50",
+      icon: "text-[#4CAF50]",
+      iconBg: "fa-solid fa-briefcase",
+    },
+    {
+      gradient: "from-purple-50 to-violet-50",
+      icon: "text-[#9C27B0]",
+      iconBg: "fa-solid fa-lightbulb",
+    },
+    {
+      gradient: "from-orange-50 to-amber-50",
+      icon: "text-[#FF9800]",
+      iconBg: "fa-solid fa-rocket",
+    },
+    {
+      gradient: "from-pink-50 to-rose-50",
+      icon: "text-[#FF4081]",
+      iconBg: "fa-solid fa-heart",
+    },
+    {
+      gradient: "from-cyan-50 to-teal-50",
+      icon: "text-[#00BCD4]",
+      iconBg: "fa-solid fa-star",
+    },
+  ];
 
   // Generate profile title based on analysis
-  const generateProfileTitle = (analysisText) => {
-    const lowerAnalysis = analysisText.toLowerCase();
-
-    if (lowerAnalysis.includes("creative") && lowerAnalysis.includes("help")) {
-      return "Creative Helper with Amazing Potential ✨";
-    } else if (
-      lowerAnalysis.includes("detail") ||
-      lowerAnalysis.includes("organized")
-    ) {
-      return "Detail-Oriented Achiever ✨";
-    } else if (
-      lowerAnalysis.includes("practical") ||
-      lowerAnalysis.includes("structured")
-    ) {
-      return "Practical Problem Solver ✨";
-    } else {
+  const generateProfileTitle = () => {
+    if (topCareerAreas.length === 0) {
       return "Amazing Learner with Unique Strengths ✨";
     }
+    if (topCareerAreas.length === 1) {
+      return `${topCareerAreas[0]} Enthusiast ✨`;
+    }
+
+    return `${topCareerAreas.slice(0, 2).join(" & ")} Explorer ✨`;
   };
 
-  const profileTitle = generateProfileTitle(analysis);
-
+  const profileTitle = generateProfileTitle();
   return (
     <div className="min-h-screen bg-[#F5F7FA]">
       <main>
@@ -188,96 +216,113 @@ const Results = () => {
               </p>
             </div>
 
-            {/* Superpower Discovery */}
-            <div className="bg-gradient-to-br from-white to-blue-50 rounded-2xl p-8 mb-8 shadow-lg">
-              <div className="text-center mb-8">
-                <div className="w-24 h-24 bg-gradient-to-br from-[#FFC107] to-[#FF9800] rounded-full mx-auto mb-6 flex items-center justify-center">
-                  <i className="fa-solid fa-magic-wand-sparkles text-white text-3xl animate-pulse"></i>
-                </div>
-                <h2 className="text-3xl font-bold text-[#212121] mb-3">
-                  Your Superpower Profile
-                </h2>
-                <p className="text-[#1A73E8] font-semibold text-lg">
-                  {profileTitle}
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {superpowers.map((superpower, index) => (
-                  <div
-                    key={index}
-                    className="bg-white rounded-xl p-6 text-center shadow-sm"
-                  >
-                    <div
-                      className={`w-16 h-16 ${superpower.bgColor} rounded-full flex items-center justify-center mx-auto mb-4`}
-                    >
-                      <i
-                        className={`${superpower.icon} ${superpower.color} text-2xl`}
-                      ></i>
-                    </div>
-                    <h3 className="text-lg font-semibold text-[#212121] mb-2">
-                      {superpower.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm">
-                      {superpower.description}
-                    </p>
+            {/* Top Career Areas - Dynamic Display */}
+            {topCareerAreas.length > 0 && (
+              <div className="bg-gradient-to-br from-white to-blue-50 rounded-2xl p-8 mb-8 shadow-lg">
+                <div className="text-center mb-8">
+                  <div className="w-24 h-24 bg-gradient-to-br from-[#FFC107] to-[#FF9800] rounded-full mx-auto mb-6 flex items-center justify-center">
+                    <i className="fa-solid fa-magic-wand-sparkles text-white text-3xl animate-pulse"></i>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Detailed Analysis */}
-            <div className="bg-white rounded-2xl p-8 mb-8 shadow-lg">
-              <h2 className="text-2xl font-bold text-[#212121] mb-6 flex items-center gap-3">
-                <i className="fa-solid fa-chart-line text-[#1A73E8]"></i>
-                Your Personal Analysis
-              </h2>
-
-              <div className="space-y-6">
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
-                  <h3 className="text-lg font-semibold text-[#212121] mb-3 flex items-center gap-2">
-                    <i className="fa-solid fa-user text-[#1A73E8]"></i>
-                    About You
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed">
-                    {parsedAnalysis.overview}
+                  <h2 className="text-3xl font-bold text-[#212121] mb-3">
+                    Your Career Profile
+                  </h2>
+                  <p className="text-[#1A73E8] font-semibold text-lg">
+                    {profileTitle}
                   </p>
                 </div>
 
-                <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6">
-                  <h3 className="text-lg font-semibold text-[#212121] mb-3 flex items-center gap-2">
-                    <i className="fa-solid fa-briefcase text-[#4CAF50]"></i>
-                    Career Suggestions
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed">
-                    {parsedAnalysis.careers}
-                  </p>
-                </div>
-
-                <div className="bg-gradient-to-r from-purple-50 to-violet-50 rounded-xl p-6">
-                  <h3 className="text-lg font-semibold text-[#212121] mb-3 flex items-center gap-2">
-                    <i className="fa-solid fa-graduation-cap text-[#9C27B0]"></i>
-                    Learning Path
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed">
-                    {parsedAnalysis.education}
-                  </p>
-                </div>
-
-                <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl p-6">
-                  <h3 className="text-lg font-semibold text-[#212121] mb-3 flex items-center gap-2">
-                    <i className="fa-solid fa-rocket text-[#FF9800]"></i>
-                    Next Steps
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed">
-                    {parsedAnalysis.nextSteps}
-                  </p>
+                <div className="flex flex-wrap justify-center gap-4 mb-6">
+                  {topCareerAreas.map((area, index) => (
+                    <div
+                      key={index}
+                      className="bg-gradient-to-r from-[#1A73E8] to-[#0D47A1] text-white rounded-full px-6 py-3 font-semibold shadow-md transform hover:scale-105 transition-transform"
+                    >
+                      <i className="fa-solid fa-star mr-2"></i>
+                      {area}
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
+            )}
+
+            {/* Dynamic AI Analysis Section*/}
+            {Object.keys(aiAnalysis).length > 0 && (
+              <div className="bg-white rounded-2xl p-8 mb-8 shadow-lg">
+                <h2 className="text-2xl font-bold text-[#212121] mb-6 flex items-center gap-3">
+                  <i className="fa-solid fa-chart-line text-[#1A73E8]"></i>
+                  Your Personal Analysis
+                </h2>
+
+                <div className="space-y-6">
+                  {Object.entries(aiAnalysis).map(([key, value], index) => {
+                    if (!value || typeof value !== "string") return null;
+
+                    const colorScheme =
+                      colorSchemes[index % colorSchemes.length];
+
+                    // Format the key to be more readable (e.g., "explanation" -> "Explanation")
+                    const formattedTitle = key
+                      .replace(/([A-Z])/g, " $1")
+                      .replace(/^./, (str) => str.toUpperCase())
+                      .trim();
+
+                    return (
+                      <div
+                        key={key}
+                        className={`bg-gradient-to-r ${colorScheme.gradient} rounded-xl p-6`}
+                      >
+                        <h3 className="text-lg font-semibold text-[#212121] mb-3 flex items-center gap-2">
+                          <i
+                            className={`${colorScheme.iconBg} ${colorScheme.icon}`}
+                          ></i>
+                          {formattedTitle}
+                        </h3>
+                        <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                          {value}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Career Scores - Dynamic Bar Chart */}
+            {/* {Object.keys(scores).length > 0 && (
+              <div className="bg-white rounded-2xl p-8 mb-8 shadow-lg">
+                <h2 className="text-2xl font-bold text-[#212121] mb-6 flex items-center gap-3">
+                  <i className="fa-solid fa-chart-bar text-[#1A73E8]"></i>
+                  Your Career Interest Scores
+                </h2>
+                <div className="space-y-4">
+                  {Object.entries(scores)
+                    .sort(([, a], [, b]) => b - a)
+                    .map(([category, score]) => (
+                      <div key={category}>
+                        <div className="flex justify-between mb-2">
+                          <span className="text-[#212121] font-medium">
+                            {category}
+                          </span>
+                          <span className="text-[#1A73E8] font-semibold">
+                            {score}%
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                          <div
+                            className="bg-gradient-to-r from-[#1A73E8] to-[#4CAF50] h-3 rounded-full transition-all duration-500 ease-out"
+                            style={{
+                              width: `${Math.max(0, Math.min(100, score))}%`,
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )} */}
 
             {/* Response Summary */}
-            <div className="bg-white rounded-2xl p-8 mb-8 shadow-lg">
+            {/* <div className="bg-white rounded-2xl p-8 mb-8 shadow-lg">
               <h2 className="text-2xl font-bold text-[#212121] mb-6 flex items-center gap-3">
                 <i className="fa-solid fa-list-check text-[#1A73E8]"></i>
                 Your Quiz Responses ({answers.length} questions)
@@ -311,7 +356,7 @@ const Results = () => {
                   </p>
                 </div>
               )}
-            </div>
+            </div> */}
 
             {/* Action Buttons */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -366,7 +411,7 @@ const Results = () => {
 
                   <Link
                     to="/ai-advisor"
-                    state={{ analysis, answers, quizId, ageRange }}
+                    state={{ analysis, quizId, ageRange }}
                     className="w-full bg-white text-[#4CAF50] rounded-full py-3 px-6 font-semibold hover:bg-gray-50 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
                   >
                     <i className="fa-solid fa-comment-dots"></i>

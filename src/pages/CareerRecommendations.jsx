@@ -34,7 +34,7 @@ const CareerRecommendation = () => {
   const [isSaved, setIsSaved] = useState(false);
 
   const { quizId, user } = location.state || {};
-  const userId = user?._id;
+  const userId = user?.id;
 
   useEffect(() => {
     const fetchRecommendations = async () => {
@@ -49,7 +49,7 @@ const CareerRecommendation = () => {
         const response = await axios.get(
           `${apiURL}/ai/career-recommendations`,
           {
-            params: { childId: userId, quizId: quizId },
+            params: { userId: userId, childId: userId, quizId: quizId },
             headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
@@ -126,8 +126,8 @@ const CareerRecommendation = () => {
               Your Perfect Career Matches
             </h1>
             <p className="md:text-lg text-gray-600 max-w-2xl mx-auto italic">
-              Based on the quiz you have taken, here are careers that align with your
-              strengths
+              Based on the quiz you have taken, here are careers that align with
+              your strengths
             </p>
           </div>
         </div>
