@@ -197,7 +197,10 @@ const Home = () => {
   const getFilteredContent = () => {
     const allContent = dashboardData?.educationalContents || [];
 
-    const videos = allContent.flatMap((content) => content.videos || []);
+    const videos = allContent.flatMap((content) => {
+      const videoArray = content.videos || content.videoUrl || [];
+      return videoArray;
+    });
     const books = allContent.flatMap((content) => content.books || []);
     const games = allContent.flatMap((content) => content.games || []);
 
@@ -332,7 +335,7 @@ const Home = () => {
               </div>
 
               {/* My Projects Section */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm">
+              {/* <div className="bg-white rounded-2xl p-6 shadow-sm">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="font-semibold text-[#212121]">My Projects</h3>
                   <button className="w-8 h-8 rounded-full bg-[#FFC107]/10 flex items-center justify-center hover:bg-[#FFC107]/20 transition-colors">
@@ -372,7 +375,7 @@ const Home = () => {
                     </button>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               {/* Badges Showcase */}
               <div className="bg-white rounded-2xl p-6 shadow-sm">

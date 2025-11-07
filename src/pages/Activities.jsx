@@ -19,7 +19,7 @@ import {
   DialogTrigger,
 } from "../components/ui/dialog";
 import { Button } from "../components/ui/button";
-import { Clock, Star, Play } from "lucide-react";
+import { Clock, Star, Play, Upload, X, Image as ImageIcon } from "lucide-react";
 
 const Activities = () => {
   const apiURL = import.meta.env.VITE_REACT_APP_BASE_URL;
@@ -29,8 +29,10 @@ const Activities = () => {
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
-  // Function to determine if community is suitable for child's age
+  // Function to determine if challenge is suitable for child's age
   const isAgeAppropriate = (ageRange, childAge) => {
     if (!ageRange || !childAge) return true; // Show all if age data is missing
 
@@ -62,7 +64,7 @@ const Activities = () => {
     staleTime: 5 * 60 * 1000,
   });
 
-  // Filter communities based on child's age
+  // Filter challenges based on child's age
   const filteredActivities = useMemo(() => {
     if (!Array.isArray(activities)) return [];
 
@@ -93,23 +95,63 @@ const Activities = () => {
     setCurrentStep("project");
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        alert("Please select an image file");
+        return;
+      }
+
+      // Validate file size (e.g., max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert("Image size should be less than 5MB");
+        return;
+      }
+
+      setSelectedImage(file);
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Remove selected image
+  const handleRemoveImage = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+  };
+
   const handleCompleteProject = async () => {
     if (!selectedActivity) return;
 
+    if (!selectedImage) {
+      alert("Please upload an image of your completed project");
+      return;
+    }
+
     setIsCompleting(true);
     try {
+      const formData = new FormData();
+      formData.append("workFile", selectedImage);
+
       const response = await axios.post(
         `${apiURL}/student/rewards/complete-challenge/${selectedActivity._id}`,
-        {},
+        formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
         }
       );
       console.log(response, "checking for complete endpoint");
       setCurrentStep("completed");
+      handleRemoveImage();
     } catch (error) {
       console.error("Error completing project:", error);
       // You might want to show an error message to the user here
@@ -215,14 +257,70 @@ const Activities = () => {
         </div>
       </div>
 
+      {/* Image Upload Section */}
+      <div className="bg-white border-2 border-dashed border-gray-300 rounded-xl p-6">
+        <h4 className="font-bold text-gray-900 mb-3 flex items-center">
+          <Upload className="w-5 h-5 mr-2" />
+          Upload Your Project Photo
+        </h4>
+        <p className="text-sm text-gray-600 mb-4">
+          Once you've completed the project, take a photo and upload it here!
+        </p>
+
+        {!imagePreview ? (
+          <div className="relative">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="hidden"
+              id="project-image"
+            />
+            <label
+              htmlFor="project-image"
+              className="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors"
+            >
+              <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                <ImageIcon className="w-10 h-10 mb-3 text-gray-400" />
+                <p className="mb-2 text-sm text-gray-500">
+                  <span className="font-semibold">Click to upload</span> or drag
+                  and drop
+                </p>
+                <p className="text-xs text-gray-500">
+                  PNG, JPG, or JPEG (MAX. 5MB)
+                </p>
+              </div>
+            </label>
+          </div>
+        ) : (
+          <div className="relative">
+            <img
+              src={imagePreview}
+              alt="Project preview"
+              className="w-full h-64 object-cover rounded-lg"
+            />
+            <button
+              onClick={handleRemoveImage}
+              className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors shadow-lg"
+            >
+              <X className="w-4 h-4" />
+            </button>
+            <div className="mt-2 text-sm text-green-600 font-medium flex items-center">
+              <Star className="w-4 h-4 mr-1" />
+              Image uploaded successfully!
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg">
         <div className="flex items-start">
           <span className="text-2xl mr-3">💡</span>
           <div>
             <p className="font-semibold text-amber-800">Pro Tip:</p>
             <p className="text-amber-700">
-              Take your time and don't forget to have fun! You can always
-              rewatch the tutorial if needed.
+              Take a clear photo showing your completed project. Make sure it's
+              well-lit and shows your work!
             </p>
           </div>
         </div>
@@ -453,7 +551,7 @@ const Activities = () => {
                           <Button
                             type="button"
                             onClick={handleCompleteProject}
-                            disabled={isCompleting}
+                            disabled={isCompleting || !selectedImage}
                             className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:opacity-50"
                           >
                             {isCompleting
